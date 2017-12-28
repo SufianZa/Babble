@@ -11,7 +11,7 @@
 <div class="container-personal-info" style="overflow:auto; background-color:#e8efff;">
     <br>
 
-    <form action="/re">
+    <form action="/redirect">
         <label>Benutzername:</label>
         <input type="text" name="sessionID" value="">
         <input type="submit" value="Login">
@@ -79,5 +79,14 @@
 
       input[type=submit]:hover {
           background-color: #45a049;
+      }
+
+      body {
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: 18px;
+          font-style: normal;
+          font-variant: normal;
+          font-weight: 500;
+          line-height: 26.4px;
       }
   </style>

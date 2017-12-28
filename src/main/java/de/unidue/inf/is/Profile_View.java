@@ -63,9 +63,9 @@ public final class Profile_View extends HttpServlet {
         request.setAttribute("status",getUser(profile_name).getStatus());
         request.setAttribute("username",getUser(profile_name).getUsername());
         //load image
-        request.setAttribute("image","/image.jpg");
 
-        //load all activities for user (Like/re-babbles)
+
+        //load all activities for user (Like/Redirect-babbles)
         //..
         request.setAttribute("babble",babbles);
 
@@ -85,19 +85,5 @@ public final class Profile_View extends HttpServlet {
     return null;
     }
 
-    public String extractBytes (String ImageName) throws IOException {
-        // open image
-        File imgPath = new File(ImageName);
-        BufferedImage bufferedImage = ImageIO.read(imgPath);
-
-        // get DataBufferBytes from Raster
-        WritableRaster raster = bufferedImage.getRaster();
-        DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-        byte[] decoded = Base64.decodeBase64(data.getData());
-        String imgDataAsBase64 = new String(decoded);
-        String  imgAsBase64 = "data:image/png;base64," + imgDataAsBase64;
-
-        return imgAsBase64;
-    }
 }
 

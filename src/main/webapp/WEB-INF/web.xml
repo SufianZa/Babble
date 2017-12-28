@@ -80,13 +80,13 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>re</servlet-name>
-		<servlet-class>de.unidue.inf.is.re</servlet-class>
+		<servlet-name>redirect</servlet-name>
+		<servlet-class>de.unidue.inf.is.Redirect</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>re</servlet-name>
-		<url-pattern>/re</url-pattern>
+		<servlet-name>redirect</servlet-name>
+		<url-pattern>/redirect</url-pattern>
 	</servlet-mapping>
 
     <servlet>

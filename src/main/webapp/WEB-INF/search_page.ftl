@@ -78,4 +78,12 @@
             background-color: #f2f2f2;
             padding: 20px;
         }
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 18px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 500;
+            line-height: 26.4px;
+        }
   </style>
