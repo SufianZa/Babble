@@ -20,26 +20,15 @@
 
   <style>
         .container {
-            width: 400px;
-            height: 100px;
-            margin: 30%;
+            width: 100%;
+            margin-top:20px;
+
+
         }
-      #search{
-          border-radius: 7px;
-          background: #ececf2;
-          font-size: 25px;
-      }
-        #btn{
-            border-radius: 7px;
-            background: #ececf2;
-            height: 30px;
-            font-size: 18px;
-        }
+
 
         .ul-head {
             list-style-type: none;
-            margin: 0;
-            padding: 0;
             overflow: hidden;
             background-color: #1f669c;
         }
@@ -60,4 +49,33 @@
             background-color: #111;
         }
 
+        input[type=text] {
+
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        div {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
   </style>

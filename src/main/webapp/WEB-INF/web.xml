@@ -6,6 +6,7 @@
 
 	<display-name>Babble</display-name>
 
+
 	<servlet>
 		<servlet-name>freemarker</servlet-name>
 		<servlet-class>freemarker.ext.servlet.FreemarkerServlet</servlet-class>
@@ -66,7 +67,7 @@
 
 	<servlet-mapping>
 		<servlet-name>profile_view</servlet-name>
-		<url-pattern>/profile_view</url-pattern>
+		<url-pattern>/profile_view/*</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>home_login</servlet-name>
@@ -76,6 +77,16 @@
 	<servlet-mapping>
 		<servlet-name>home_login</servlet-name>
 		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>re</servlet-name>
+		<servlet-class>de.unidue.inf.is.re</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>re</servlet-name>
+		<url-pattern>/re</url-pattern>
 	</servlet-mapping>
 
     <servlet>

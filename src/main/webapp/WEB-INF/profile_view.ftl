@@ -3,14 +3,17 @@
 
     <!-- Header Tools-->
 <body>
-    <ul class="ul-head">
+<ul class="ul-head">
+
+<#if "${loggedUser}"!="${profile}">
     <li class="head" style="float: right"><a href="#">Block/Unblock</a></li>
     <li class="head" style="float: right"><a href="#">Follow/Unfollow</a></li>
-    <li class="head" style="float: left"><a href="./search">Search Babble</a></li>
-    <li class="head"><a href="#">logged in as ${loggedUser}</a> </li>
+</#if>
+    <li class="head" style="float: left"><a href="../search">Search Babble</a></li>
+    <li class="head"><a href="#">logged in as ${loggedUser}</a></li>
 </ul>
 
-    <!--Personal Information-->
+<!--Personal Information-->
 <div class="container-personal-info" style="overflow:auto; background-color:#e8efff;">
     <img src="http://www.qatarliving.com/sites/all/themes/qatarliving_v3/images/avatar.jpeg" width="120" height="110"
          style="float: right; margin: 2%">
@@ -18,19 +21,19 @@
     <div>Name : ${username}</div>
     <div>Status : ${status}</div>
 </div>
-    <body>
+<body>
 
-    <!--new Babble-->
-    <ul class="ul-head">
-        <li class="head" style="float: right"><a href="#">New Babble</a></li>
-    </ul>
-    <!-- Timeline -->
-    <div class="container" style="width: 100%;min-width: 200px;">
+<!--new Babble-->
+<ul class="ul-head">
+    <li class="head" style="float: right"><a href="#">New Babble</a></li>
+</ul>
+<!-- Timeline -->
+<div class="container" style="width: 100%;min-width: 200px;">
     <ul style="list-style-type: none;">
     <#list babble as bab>
         <li>
             <fieldset style="background: #ececf2;">
-                <legend>${bab.author}</legend>
+                <legend> <a href="/profile_view/${bab.author}">${bab.author}</a></legend>
                 <fieldset style="min-height: 100px; background: #c9d4fe; border-radius: 5px; border-color: transparent">
                     <p>
                         ${bab.inhalt}

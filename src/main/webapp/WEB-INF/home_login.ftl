@@ -8,10 +8,11 @@
 </ul>
 
 <!-- Login Information-->
-<div class="container-personal-info" style="overflow:auto; background-color:#e8efff; margin: 5%">
+<div class="container-personal-info" style="overflow:auto; background-color:#e8efff;">
     <br>
-    <br>Benutzername:<br>
-    <form action="/profile_view">
+
+    <form action="/re">
+        <label>Benutzername:</label>
         <input type="text" name="sessionID" value="">
         <input type="submit" value="Login">
     </form>
@@ -25,7 +26,16 @@
 
   <style>
       .container-personal-info > div {
-          margin-top: 30%;
+          width: 100%;
+          margin-top:5px;
+
+
+      }
+      .container-personal-info  {
+
+          margin-top:10px;
+
+
       }
 
       .ul-head {
@@ -47,5 +57,27 @@
           padding: 14px 16px;
           text-decoration: none;
       }
+      input[type=text] {
 
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+      }
+
+      input[type=submit] {
+          background-color: #4CAF50;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+
+      input[type=submit]:hover {
+          background-color: #45a049;
+      }
   </style>
