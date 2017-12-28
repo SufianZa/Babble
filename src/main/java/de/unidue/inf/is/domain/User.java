@@ -25,24 +25,28 @@ public final class User {
     }
 
     public User() {
+		username = "Warum?";
+        name = " ";
+        status = " ";
+        image_path = " ";
 
     }
 
 
     public String getUsername() {
-        return username;
+        return new String(username);
     }
 
     public String getStatus() {
-        return status;
+        return new String(status);
     }
 
     public String getName() {
-        return name;
+        return new String(name);
     }
 
     public String getImage_path() {
-        return image_path;
+        return new String(image_path);
     }
 
     public void setUsername(String username){

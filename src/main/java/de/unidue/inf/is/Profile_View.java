@@ -26,22 +26,29 @@ public final class Profile_View extends HttpServlet {
     private static List<Babble> babbles = new ArrayList<>();
 
 
-    private User eingeloggter_user= new User();
+    
     DB_query db_query = new DB_query();
+    
+    public User eingeloggter_user= db_query.getUser("dbuser");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         session.setAttribute("sessionID",request.getParameter("sessionID"));
         String sessionID = (String) session.getAttribute("sessionID");
-        eingeloggter_user.setUsername(sessionID); //TODO get Information by name for logged in user
+        //eingeloggter_user.setUsername(sessionID); //TODO get Information by name for logged in user
         System.out.println("logged in as "+ sessionID);
 
         request.setAttribute("loggedUser",sessionID);
         request.setAttribute("babble", babbles);
-        request.setAttribute("name","hahah");
-        request.setAttribute("status","asdasdasd");
-        request.setAttribute("username","asdasdasdasdasdas");
+        //request.setAttribute("name","hahah");
+        //request.setAttribute("status","asdasdasd");
+        //request.setAttribute("username","asdasdasdasdasdas");
+        
+        request.setAttribute("name",eingeloggter_user.getName());
+        request.setAttribute("status",eingeloggter_user.getStatus());
+        request.setAttribute("username", eingeloggter_user.getUsername());
+        //System.err.println("Der Benutzername: " + eingeloggter_user.getUsername());
 
         request.getRequestDispatcher("/profile_view.ftl").forward(request, response);
 

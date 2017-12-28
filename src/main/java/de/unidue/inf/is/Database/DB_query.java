@@ -26,12 +26,18 @@ public final class DB_query implements Closeable{
     public DB_query() throws DBTransException {
 		
 		try {
-            connection = DBUtil.getExternalConnection("mybabble");
+            connection = DBUtil.getExternalConnection("MYBABBLE");
             connection.setAutoCommit(false);
         }
         catch (SQLException e) {
             //throw new DBTransException(e);
             // Mach was hier!!
+            
+            System.err.println("Constructor failed");
+            System.err.println("SQLState: " + e.getSQLState());
+			System.err.println("Error Code: " + e.getErrorCode());
+			System.err.println("Message: " + e.getMessage());
+            
         }
     }
 
@@ -40,26 +46,24 @@ public final class DB_query implements Closeable{
     //Get timeline activity ...
     
     
-    public User getUser(String username_i) throws DBTransException {
+   public User getUser(String username_i) throws DBTransException {
 		
 		User searchFor = new User();
+		
+		String new_name = new String(username_i);
 		
 		//String 
 		try{
 		
-		String selectSQL = "SELECT username, name, status, foto FROM BabbleUser WHERE username = ?";
-		PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
-		preparedStatement.setString(1, username_i);
-		ResultSet rs = preparedStatement.executeQuery(selectSQL );
-		/*
-		while (rs.next()) {
-			String userid = rs.getString("USER_ID");
-			String username = rs.getString("USERNAME");
-		}*/
+		String selectSQL = "SELECT status FROM BabbleUser WHERE username = 'dbuser'";
+		PreparedStatement ps = connection.prepareStatement(selectSQL); //Im Moment ist connection null
+		//ps.setString(1, "dbuser");
+		ResultSet rs = ps.executeQuery();
+		
 		
 		if(rs.first()){
 			
-			searchFor.setUsername(username_i);
+			searchFor.setUsername(rs.getString("username"));
 			searchFor.setName(rs.getString("name"));
 			searchFor.setStatus(rs.getString("status"));
 			searchFor.setImage_path(rs.getString("foto"));
@@ -68,8 +72,8 @@ public final class DB_query implements Closeable{
 			
 			} else {  //Überlegen was, wenn es den Benutzer nicht gibt
 				
-			searchFor.setUsername(username_i);
-			searchFor.setName("Donald Knuth");
+			searchFor.setUsername("DKnuth1");
+			searchFor.setName("Donald Knuth else");
 			searchFor.setStatus("Hallo Welt");
 			searchFor.setImage_path(" ");	
 				
@@ -80,12 +84,14 @@ public final class DB_query implements Closeable{
 		} catch(SQLException e){
 			
 			
-			//System.err.println("SQLState: " + e.getSQLState());
-			//System.err.println("Error Code: " + e.getErrorCode());
-			//System.err.println("Message: " + e.getMessage());
+			System.err.println("SQLState: " + e.getSQLState());
+			System.err.println("Error Code: " + e.getErrorCode());
+			System.err.println("Message: " + e.getMessage());
 			
-			searchFor.setUsername(username_i);
-			searchFor.setName("Donald Knuth");
+			//e.printStackTrace();
+			
+			searchFor.setUsername("DKnuth2");
+			searchFor.setName("Donald Knuth except");
 			searchFor.setStatus("Hallo Welt");
 			searchFor.setImage_path(" ");	
 			
@@ -146,37 +152,179 @@ public final class DB_query implements Closeable{
 				return null;
 		
 		}
+	
+		
+	public void makeBabble(String username, String text){
+			
+		try {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into Babble (text,creator) values (?, ?)");
+            preparedStatement.setString(1, text);
+            preparedStatement.setString(2, username);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+            //throw new DBTransException(e);
+        }
+			
+		
+	}
 		
 	public int getLikes(int id){
-			return 0;
-		}
+		
+		int likes;
+		
+		
+		try{
+		
+		String selectSQL = "SELECT count(user) FROM likesbabble WHERE babble = ? and type='like'";
+		PreparedStatement ps = connection.prepareStatement(selectSQL);
+		ps.setString(1, id);
+		ResultSet rs = ps.executeQuery();
+		
+		
+		if(rs.first()){
+			
+			likes = rs.getInteger("count(user)");
+				
+		} else {  //Überlegen was, wenn es den Benutzer nicht gibt
+				
+			likes = 0;
+			
+				}
+				
+		} catch(SQLException e){
+			
+			likes = 0;
+						
+			}
+		
+		
+		return likes;
+	}
 		
 	public int getDislikes(int id){
-			return 0;
+		
+		int dislikes;
+		
+		
+		try{
+		
+		String selectSQL = "SELECT count(user) FROM likesbabble WHERE babble = ? and type='dislike'";
+		PreparedStatement ps = connection.prepareStatement(selectSQL);
+		ps.setString(1, id);
+		ResultSet rs = ps.executeQuery();
+		
+		
+		if(rs.first()){
+			
+			dislikes = rs.getInteger("count(user)");
+				
+		} else {  //Überlegen was, wenn es den Benutzer nicht gibt
+				
+			dislikes = 0;
+			
+				}
+				
+		} catch(SQLException e){
+			
+			dislikes = 0;
+						
+			}
+		
+		
+		return dislikes;
 		}
     
     
     public int getRebabbles(int id){
-			return 0;
-		}
+		
+		int rebabbles;
+		
+		
+		try{
+		
+		String selectSQL = "SELECT count(user) FROM rebabble WHERE babble = ?";
+		PreparedStatement ps = connection.prepareStatement(selectSQL);
+		ps.setString(1, id);
+		ResultSet rs = ps.executeQuery();
+		
+		
+		if(rs.first()){
+			
+			rebabbles = rs.getInteger("count(user)");
+				
+		} else {  //Überlegen was, wenn es den Benutzer nicht gibt
+				
+			rebabbles = 0;
+			
+				}
+				
+		} catch(SQLException e){
+			
+			rebabbles = 0;
+						
+			}
+				
+		return rebabbles;
+		
+	}
 		
 	
 	public void Like(int babbleid, String username){
+		
+		try {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into LikesBabble (user, babble ,type) values (?, ?, 'like')");
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, babbleid);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+            //throw new DBTransException(e);
+        }
 		
 		}
 		
 	public void Dislike(int babbleid, String username){
 		
-		}
+		try {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into LikesBabble (user, babble ,type) values (?, ?, 'dislike')");
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, babbleid);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+            //throw new DBTransException(e);
+        }
+	}
 		
 	public void rebabble(int babbleid, String username){
 		
-		}
+		try {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into ReBabble (user, babble) values (?, ?)");
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, babbleid);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+            //throw new DBTransException(e);
+        }
+        
+	}
 		
 		
 	public void follow(String he_who_follows, String he_who_is_followed){
 		
-		}
+		try {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into Follows (follower, followee) values (?, ?)");
+            preparedStatement.setString(1, he_who_follows);
+            preparedStatement.setString(2, he_who_is_followed);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+            //throw new DBTransException(e);
+        }
+        
+	}
 	
 	public void unfollow(String he_who_follows, String he_who_is_followed){
 		
@@ -184,6 +332,15 @@ public final class DB_query implements Closeable{
 		
 	public void block(String blocker, String blockee){
 		
+		try {
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into Blocks (blocker, blockee) values (?, ?)");
+            preparedStatement.setString(1, blocker);
+            preparedStatement.setString(2, blockee);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+            //throw new DBTransException(e);
+        }
 		}
 		
 	public void unblock(String blocker, String blockee){
@@ -193,11 +350,6 @@ public final class DB_query implements Closeable{
 	public boolean isBlocked(String blocker, String blockee){
 			return false;
 		}	
-	
-		
-	public void makeBabble(String username, String text){
-		
-		}
 		
 		
 	public ArrayList<Babble> getTimeLine(String username){

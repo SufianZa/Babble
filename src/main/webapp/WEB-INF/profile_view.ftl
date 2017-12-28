@@ -14,9 +14,9 @@
 <div class="container-personal-info" style="overflow:auto; background-color:#e8efff;">
     <img src="http://www.qatarliving.com/sites/all/themes/qatarliving_v3/images/avatar.jpeg" width="120" height="110"
          style="float: right; margin: 2%">
-    <div>Benutzername :${name} </div>
-    <div>Name : ${username}</div>
-    <div>Status : ${status}</div>
+    <div>Benutzername : ${username} </div>
+    <div>Name : ${name} </div>
+    <div>Status : ${status} </div>
 </div>
     <body>
 

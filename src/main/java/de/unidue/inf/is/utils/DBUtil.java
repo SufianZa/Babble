@@ -39,13 +39,12 @@ public final class DBUtil {
 
     public static Connection getExternalConnection(String database) throws SQLException {
         Properties properties = new Properties();
-        properties.setProperty("securityMechanism",
-                        Integer.toString(com.ibm.db2.jcc.DB2BaseDataSource.USER_ONLY_SECURITY));
-        properties.setProperty("user", "dbp66");
+        properties.setProperty("securityMechanism", Integer.toString(com.ibm.db2.jcc.DB2BaseDataSource.USER_ONLY_SECURITY));
+        properties.setProperty("user", "DBP66");
         properties.setProperty("password", "vohr9uaw");
 
         final String url = "jdbc:db2://helios.is.inf.uni-due.de:50066/" + database + ":currentSchema=dbp66;";
-        System.out.println(url);
+        //System.out.println(url);
         Connection connection = DriverManager.getConnection(url, properties);
         return connection;
     }
