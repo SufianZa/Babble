@@ -9,10 +9,16 @@
 
 
 <div class="container">
-    <form>
-         <input id="search" type="text" >
+    <form action="">
+         <input id="search" type="text" name="searched" >
          <input id="btn" type="submit" value="Search">
+    </form>
+</div>
 
+<div class="container">
+    <form action="">
+        <p>resault for </p>
+        <p>${searchedfor}</p>
     </form>
 </div>
 </body>

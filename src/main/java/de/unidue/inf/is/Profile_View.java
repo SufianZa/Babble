@@ -17,6 +17,7 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +33,17 @@ public final class Profile_View extends HttpServlet {
     private static List<Babble> babbles = new ArrayList<>();
     private static List<User> userlist = new ArrayList<>();
     static {
-        babbles.add(new Babble("Peace ♥ ","11.21.2012","Sufian",0,58,20));
-        babbles.add(new Babble("I hate u all","12.2.2011","Mark",55,3,1));
+        babbles.add(new Babble(5,"Peace ♥ ",new Timestamp(System.currentTimeMillis()),"Sufian",0,58,20));
+        babbles.add(new Babble(2,"I hate u all",new Timestamp(System.currentTimeMillis()),"Mark",55,3,1));
 
         userlist.add(new User("Sufian","SufianZa","Hello im usering babble","no Pic"));
         userlist.add(new User("Mark","Markus","my life sucks","no Pic"));
 
     }
-
-
-
     DB_query db_query = new DB_query();
+    
+    public User eingeloggter_user= db_query.getUser("student_1");
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,22 +53,39 @@ public final class Profile_View extends HttpServlet {
         session.setAttribute("sessionID",sessionID);
         request.setAttribute("loggedUser",sessionID);
 
+        //eingeloggter_user.setUsername(sessionID);
+        System.out.println("logged in as " + sessionID);
+        System.out.println("time " + sessionID);
+        request.setAttribute("babble", babbles);
+        //request.setAttribute("name","hahah");
+        //request.setAttribute("status","asdasdasd");
+        //request.setAttribute("username","asdasdasdasdasdas");
+        
+        request.setAttribute("name",eingeloggter_user.getName());
+        request.setAttribute("status",eingeloggter_user.getStatus());
+        request.setAttribute("username", eingeloggter_user.getUsername());
+        //System.err.println("Der Benutzername: " + eingeloggter_user.getUsername());
+        
+        //db_query.getUser("dbuser");
+        db_query.getBabble(2);
+
+
         //get the profile page after clicking a name
         StringBuffer url = request.getRequestURL();
         String profile_name = url.substring(url.lastIndexOf("/")+1);
         request.setAttribute("profile",profile_name);
 
 
-        //load requested page information
+     /*   //load requested page information
         request.setAttribute("name",getUser(profile_name).getName());
         request.setAttribute("status",getUser(profile_name).getStatus());
         request.setAttribute("username",getUser(profile_name).getUsername());
         //load image
-
+*/
 
         //load all activities for user (Like/Redirect-babbles)
         //..
-        request.setAttribute("babble",babbles);
+       // request.setAttribute("babble",babbles);
 
         //load self made babbles
 

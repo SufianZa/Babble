@@ -6,20 +6,20 @@
 <ul class="ul-head">
 
 <#if "${loggedUser}"!="${profile}">
-    <li class="head" style="float: right"><a href="#">Block/Unblock</a></li>
-    <li class="head" style="float: right"><a href="#">Follow/Unfollow</a></li>
+    <li class="head" style="float: right"><a href="${blockState}">${blockState}</a></li>
+    <li class="head" style="float: right"><a href="${followState}">${followState}</a></li>
 </#if>
     <li class="head" style="float: left"><a href="../search">Search Babble</a></li>
-    <li class="head"><a href="#">logged in as ${loggedUser}</a></li>
+    <li class="head"><a href="${loggedUser}">logged in as ${loggedUser}</a></li>
 </ul>
 
 <!--Personal Information-->
 <div class="container-personal-info" style="overflow:auto; background-color:#e8efff;">
     <img src="http://www.qatarliving.com/sites/all/themes/qatarliving_v3/images/avatar.jpeg" width="120" height="110"
          style="float: right; margin: 2%">
-    <div>Benutzername :${name} </div>
-    <div>Name : ${username}</div>
-    <div>Status : ${status}</div>
+    <div>Benutzername : ${username} </div>
+    <div>Name : ${name} </div>
+    <div>Status : ${status} </div>
 </div>
 <body>
 
@@ -28,6 +28,20 @@
     <li class="head" style="float: right"><a href="#">New Babble</a></li>
 </ul>
 <!-- Timeline -->
+<#if "${blocked}" != "blocked">
+    <div class="container" style="width: 100%;min-width: 200px;">
+        <ul style="list-style-type: none;">
+        <li>
+                <fieldset style="min-height: 100px; background: #c9d4fe; border-radius: 5px; border-color: transparent">
+                    <p>
+                        you are blocked
+                    </p>
+                    <div> Reason: <i>"${reason}"</i></div>
+            </fieldset>
+        </li>
+        </ul>
+    </div>
+<#else>
 <div class="container" style="width: 100%;min-width: 200px;">
     <ul style="list-style-type: none;">
     <#list babble as bab>
@@ -52,6 +66,8 @@
     </#list>
     </ul>
 </div>
+</#if>
+
 </body>
 </html>
 
@@ -83,6 +99,7 @@
       .head a:hover {
           background-color: #111;
       }
+
       body {
           font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
           font-size: 18px;
@@ -92,3 +109,5 @@
           line-height: 26.4px;
       }
   </style>
+
+
