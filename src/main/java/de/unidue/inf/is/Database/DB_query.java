@@ -6,8 +6,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -55,19 +59,19 @@ public final class DB_query implements Closeable{
 		//String 
 		try{
 		
-		String selectSQL = "SELECT status FROM BabbleUser WHERE username = 'dbuser'";
+		String selectSQL = "SELECT username, name, status, foto FROM dbp66.BabbleUser WHERE username = ?";
 		PreparedStatement ps = connection.prepareStatement(selectSQL); //Im Moment ist connection null
-		//ps.setString(1, "dbuser");
+		ps.setString(1, username_i);
 		ResultSet rs = ps.executeQuery();
 		
 		
-		if(rs.first()){
+		if(rs.next()){
 			
-			searchFor.setUsername(rs.getString("username"));
-			searchFor.setName(rs.getString("name"));
-			searchFor.setStatus(rs.getString("status"));
-			searchFor.setImage_path(rs.getString("foto"));
-			
+			searchFor.setUsername(rs.getString(1));
+			searchFor.setName(rs.getString(2));
+			searchFor.setStatus(rs.getString(3));
+			searchFor.setImage_path(rs.getString(4));
+						
 			return searchFor;
 			
 			} else {  //Überlegen was, wenn es den Benutzer nicht gibt
@@ -80,7 +84,7 @@ public final class DB_query implements Closeable{
 			return searchFor;
 				
 				}
-				
+			
 		} catch(SQLException e){
 			
 			
@@ -103,7 +107,7 @@ public final class DB_query implements Closeable{
 		
 	public void addUser(User userToAdd){
 		try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into BabbleUser (username, name, status) values (?, ?, ?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into dbp66.BabbleUser (username, name, status) values (?, ?, ?)");
             preparedStatement.setString(1, userToAdd.getUsername());
             preparedStatement.setString(2, userToAdd.getName());
             preparedStatement.setString(3, userToAdd.getStatus());
@@ -111,43 +115,72 @@ public final class DB_query implements Closeable{
         }
         catch (SQLException e) {
             //throw new DBTransException(e);
+            System.err.println("SQLState: " + e.getSQLState());
+			System.err.println("Error Code: " + e.getErrorCode());
+			System.err.println("Message: " + e.getMessage());
+			
         }
 	}
 		
 	public Babble getBabble(int babbleid){
 		
-		/*
-		User searchFor = new User();
-		
-		//String 
-		
-		
-		String selectSQL = "SELECT username, name, status, foto FROM BabbleUser WHERE username = ?";
-		PreparedStatement preparedStatement = dbConnection.prepareStatement(selectSQL);
-		preparedStatement.setString(1, username_i);
-		ResultSet rs = preparedStatement.executeQuery(selectSQL );
-		
-		while (rs.next()) {
-			String userid = rs.getString("USER_ID");
-			String username = rs.getString("USERNAME");
-		}
-		
-		if(rs.first()){
-			
-			searchFor.setUsername(username_i);
-			searchFor.setName(rs.getString("name"));
-			searchFor.setStatus(rs.getString("status"));
-			searchFor.setImage_path(rs.getString("foto"));
-			
-			return searchFor;
-			
-			} else {
 				
-			return searchFor;
+		//String 
+		try{
+		
+		String selectSQL = "SELECT id, text, created, creator FROM dbp66.Babble WHERE id = ? ";
+		PreparedStatement ps = connection.prepareStatement(selectSQL);
+		ps.setInt(1, babbbleid);
+		ResultSet rs = ps.executeQuery();
+		
+		
+		if(rs.next()){
+			
+			
+			
+			int the_id = rs.getInt(1);
+			//Clob text = rs.getClob(2);
+			String babble_content = rs.getString(2);
+			Timestamp made = rs.getTimeStamp(3);
+			String author = rs.getString(4);
+			
+			//String babble_content = new String();
+			//babble_content.add(text.getSubString(1, (int) text.length()));
+						
+			return new Babble(the_id,babble_content, made, author, getLikes(the_id), getDislikes(the_id), getRebabbles(the_id));
+						
+			} else {  //Überlegen was, wenn es den Benutzer nicht gibt
+				
+			System.err.println("ResultSet war leer");
+			
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = dateFormat.parse("23/09/2007");
+			long time = date.getTime();
+			Timestamp x = new Timestamp(time);
+			
+				
+			return new Babble(0," ",x, " ",0,0,0);
 				
 				}
-				* 
-				* */
+			
+		} catch(SQLException e){
+			
+			
+			System.err.println("SQLState: " + e.getSQLState());
+			System.err.println("Error Code: " + e.getErrorCode());
+			System.err.println("Message: " + e.getMessage());
+			
+			//e.printStackTrace();
+			
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = dateFormat.parse("23/09/2007");
+			long time = date.getTime();
+			Timestamp x = new Timestamp(time);
+			
+				
+			return new Babble(0," ",x, " ",0,0,0);
+						
+			}
 				
 				return null;
 		
@@ -171,20 +204,20 @@ public final class DB_query implements Closeable{
 		
 	public int getLikes(int id){
 		
-		int likes;
+		int likes = 0;
 		
 		
 		try{
 		
-		String selectSQL = "SELECT count(user) FROM likesbabble WHERE babble = ? and type='like'";
+		String selectSQL = "SELECT count(user) FROM dbp66.likesbabble WHERE babble = ? and type='like'";
 		PreparedStatement ps = connection.prepareStatement(selectSQL);
-		ps.setString(1, id);
+		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 		
 		
 		if(rs.first()){
 			
-			likes = rs.getInteger("count(user)");
+			likes = rs.getInt(1);
 				
 		} else {  //Überlegen was, wenn es den Benutzer nicht gibt
 				
@@ -211,13 +244,13 @@ public final class DB_query implements Closeable{
 		
 		String selectSQL = "SELECT count(user) FROM likesbabble WHERE babble = ? and type='dislike'";
 		PreparedStatement ps = connection.prepareStatement(selectSQL);
-		ps.setString(1, id);
+		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 		
 		
 		if(rs.first()){
 			
-			dislikes = rs.getInteger("count(user)");
+			dislikes = rs.getInt(1);
 				
 		} else {  //Überlegen was, wenn es den Benutzer nicht gibt
 				
@@ -245,13 +278,13 @@ public final class DB_query implements Closeable{
 		
 		String selectSQL = "SELECT count(user) FROM rebabble WHERE babble = ?";
 		PreparedStatement ps = connection.prepareStatement(selectSQL);
-		ps.setString(1, id);
+		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 		
 		
 		if(rs.first()){
 			
-			rebabbles = rs.getInteger("count(user)");
+			rebabbles = rs.getInt("count(user)");
 				
 		} else {  //Überlegen was, wenn es den Benutzer nicht gibt
 				
@@ -275,7 +308,7 @@ public final class DB_query implements Closeable{
 		try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into LikesBabble (user, babble ,type) values (?, ?, 'like')");
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, babbleid);
+            preparedStatement.setInt(2, babbleid);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
@@ -289,7 +322,7 @@ public final class DB_query implements Closeable{
 		try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into LikesBabble (user, babble ,type) values (?, ?, 'dislike')");
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, babbleid);
+            preparedStatement.setInt(2, babbleid);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
@@ -302,7 +335,7 @@ public final class DB_query implements Closeable{
 		try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into ReBabble (user, babble) values (?, ?)");
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, babbleid);
+            preparedStatement.setInt(2, babbleid);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
@@ -393,5 +426,44 @@ public final class DB_query implements Closeable{
     }
     
     
+   /* 
+    /*********************************************************************************************
+ * From CLOB to String
+ * @return string representation of clob
+ *********************************************************************************************/
+ //Dieser Code ist von https://stackoverflow.com/questions/2169732/most-efficient-solution-for-reading-clob-to-string-and-string-to-clob-in-java übernommen
+ //Dort wurde er vom Benutzer Stan Sokolov veröffentlicht
+ /*
+private String clobToString(java.sql.Clob data)
+{
+    final StringBuilder sb = new StringBuilder();
+
+    try
+    {
+        final Reader         reader = data.getCharacterStream();
+        final BufferedReader br     = new BufferedReader(reader);
+
+        int b;
+        while(-1 != (b = br.read()))
+        {
+            sb.append((char)b);
+        }
+
+        br.close();
+    }
+    catch (SQLException e)
+    {
+        log.error("SQL. Could not convert CLOB to string",e);
+        return e.toString();
+    }
+    catch (IOException e)
+    {
+        log.error("IO. Could not convert CLOB to string",e);
+        return e.toString();
+    }
+
+    return sb.toString();
+}
+    */
 
 }

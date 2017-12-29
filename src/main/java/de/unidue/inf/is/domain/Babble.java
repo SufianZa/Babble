@@ -1,15 +1,19 @@
 package de.unidue.inf.is.domain;
 
+import java.sql.Timestamp;
+
 public class Babble {
     private String inhalt="";
-    private String datum="";
+    private Timestamp datum;
     private String author="";
+    private int id = 0;
     private int likes=0;
     private int dislikes=0;
 
     private int shared=0;
 
-    public Babble(String inhalt, String datum, String author,int likes,int dislikes, int shared){
+    public Babble(int id, String inhalt, Timestamp datum, String author,int likes,int dislikes, int shared){
+        this.id= id;
         this.datum = datum;
         this.inhalt=inhalt;
         this.author=author;
@@ -18,7 +22,7 @@ public class Babble {
         this.shared=shared;
     }
 
-    public String getDatum() {
+    public Timestamp getDatum() {
         return datum;
     }
 

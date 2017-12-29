@@ -25,7 +25,7 @@ public final class User {
     }
 
     public User() {
-		username = "Warum?";
+		username = " ";
         name = " ";
         status = " ";
         image_path = " ";

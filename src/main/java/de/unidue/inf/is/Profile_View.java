@@ -29,7 +29,8 @@ public final class Profile_View extends HttpServlet {
     
     DB_query db_query = new DB_query();
     
-    public User eingeloggter_user= db_query.getUser("dbuser");
+    public User eingeloggter_user= db_query.getUser("student_1");
+    //public User eingeloggter_user = new User("testuser","Test","Hallo Welt"," ");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,7 +38,7 @@ public final class Profile_View extends HttpServlet {
         session.setAttribute("sessionID",request.getParameter("sessionID"));
         String sessionID = (String) session.getAttribute("sessionID");
         //eingeloggter_user.setUsername(sessionID); //TODO get Information by name for logged in user
-        System.out.println("logged in as "+ sessionID);
+        System.out.println("logged in as " + sessionID);
 
         request.setAttribute("loggedUser",sessionID);
         request.setAttribute("babble", babbles);
@@ -49,6 +50,9 @@ public final class Profile_View extends HttpServlet {
         request.setAttribute("status",eingeloggter_user.getStatus());
         request.setAttribute("username", eingeloggter_user.getUsername());
         //System.err.println("Der Benutzername: " + eingeloggter_user.getUsername());
+        
+        //db_query.getUser("dbuser");
+        db_query.getBabble(2);
 
         request.getRequestDispatcher("/profile_view.ftl").forward(request, response);
 
