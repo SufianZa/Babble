@@ -124,13 +124,14 @@ public final class DB_query implements Closeable{
 		
 	public Babble getBabble(int babbleid){
 		
+		//int searched_babble = babbleid
 				
 		//String 
 		try{
 		
 		String selectSQL = "SELECT id, text, created, creator FROM dbp66.Babble WHERE id = ? ";
 		PreparedStatement ps = connection.prepareStatement(selectSQL);
-		ps.setInt(1, babbbleid);
+		ps.setInt(1, babbleid);
 		ResultSet rs = ps.executeQuery();
 		
 		
@@ -141,25 +142,26 @@ public final class DB_query implements Closeable{
 			int the_id = rs.getInt(1);
 			//Clob text = rs.getClob(2);
 			String babble_content = rs.getString(2);
-			Timestamp made = rs.getTimeStamp(3);
+			Timestamp new_Stamp = rs.getTimestamp(3);
 			String author = rs.getString(4);
 			
 			//String babble_content = new String();
 			//babble_content.add(text.getSubString(1, (int) text.length()));
 						
-			return new Babble(the_id,babble_content, made, author, getLikes(the_id), getDislikes(the_id), getRebabbles(the_id));
+			return new Babble(the_id,babble_content, new_Stamp, author, getLikes(the_id), getDislikes(the_id), getRebabbles(the_id));
 						
 			} else {  //Überlegen was, wenn es den Benutzer nicht gibt
 				
 			System.err.println("ResultSet war leer");
 			
+			/*
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = dateFormat.parse("23/09/2007");
 			long time = date.getTime();
 			Timestamp x = new Timestamp(time);
-			
+			*/
 				
-			return new Babble(0," ",x, " ",0,0,0);
+			return new Babble(0," ",null, " ",0,0,0);
 				
 				}
 			
@@ -171,18 +173,16 @@ public final class DB_query implements Closeable{
 			System.err.println("Message: " + e.getMessage());
 			
 			//e.printStackTrace();
-			
+			/*
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = dateFormat.parse("23/09/2007");
 			long time = date.getTime();
 			Timestamp x = new Timestamp(time);
-			
+			*/
 				
-			return new Babble(0," ",x, " ",0,0,0);
+			return new Babble(0," ",null, " ",0,0,0);
 						
 			}
-				
-				return null;
 		
 		}
 	
