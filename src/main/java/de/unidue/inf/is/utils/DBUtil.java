@@ -43,7 +43,7 @@ public final class DBUtil {
         properties.setProperty("user", "DBP66");
         properties.setProperty("password", "vohr9uaw");
 
-        final String url = "jdbc:db2://helios.is.inf.uni-due.de:50066/" + database + ":currentSchema=dbp66;";
+        final String url = "jdbc:db2://hecate.is.inf.uni-due.de:50066/" + database + ":currentSchema=dbp66;";
         //System.out.println(url);
         Connection connection = DriverManager.getConnection(url, properties);
         return connection;
