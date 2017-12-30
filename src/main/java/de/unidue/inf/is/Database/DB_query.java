@@ -113,7 +113,7 @@ public final class DB_query implements Closeable {
 
             } else {  //Überlegen was, wenn es den Benutzer nicht gibt
 
-                System.err.println("ResultSet war leer");
+               // System.err.println("ResultSet war leer");
 			
 			/*
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -122,7 +122,7 @@ public final class DB_query implements Closeable {
 			Timestamp x = new Timestamp(time);
 			*/
 
-                return new Babble(0, " ", null, " ", 0, 0, 0);
+                return new Babble(0, " ", new Timestamp(System.currentTimeMillis()), " ", 0, 0, 0);
 
             }
 
@@ -166,15 +166,19 @@ public final class DB_query implements Closeable {
 
         try {
 
-            String selectSQL = "SELECT count(user) FROM dbp66.likesbabble WHERE babble = ? and type='like'";
+            String selectSQL = "SELECT count(user) FROM dbp66.likesbabble WHERE babble = ? and type='like' ";
             PreparedStatement ps = connection.prepareStatement(selectSQL);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
 
-            if (rs.first()) {
+            if (rs.next()) {
 
                 likes = rs.getInt(1);
+                
+                //System.err.println("Was ist hier los? : " + likes);
+                
+                return likes;
 
             } else {  //Überlegen was, wenn es den Benutzer nicht gibt
 
@@ -183,6 +187,8 @@ public final class DB_query implements Closeable {
             }
 
         } catch (SQLException e) {
+			
+			e.printStackTrace();
 
             likes = 0;
 
@@ -205,7 +211,7 @@ public final class DB_query implements Closeable {
             ResultSet rs = ps.executeQuery();
 
 
-            if (rs.first()) {
+            if (rs.next()) {
 
                 dislikes = rs.getInt(1);
 
@@ -239,9 +245,9 @@ public final class DB_query implements Closeable {
             ResultSet rs = ps.executeQuery();
 
 
-            if (rs.first()) {
+            if (rs.next()) {
 
-                rebabbles = rs.getInt("count(user)");
+                rebabbles = rs.getInt(1);
 
             } else {  //Überlegen was, wenn es den Benutzer nicht gibt
 
