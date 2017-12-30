@@ -1,20 +1,21 @@
 <html>
 <head>
-    <meta http-equiv="refresh" content="0; URL='/profile_view/${userProfile}'  " />
+    <link href="http://designers.hubspot.com/hs-fs/hub/327485/file-2054199286-css/font-awesome.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta http-equiv="refresh" content="0; URL='/profile_view/${userProfile}'"/>
 </head>
     <title>Login</title>
 
     <!-- Header Welcome-->
 <body>
 <ul class="ul-head">
-    <li class="head" style="text-align: center; margin: 6%; font-size: 40px;">Welcome to Babble</a></li>
+    <li class="head" style=" margin: 6%; font-size: 40px;"><a href="/">Welcome to Babble</a></li>
 </ul>
 
 <!-- Login Information-->
-<div class="container-personal-info" style="overflow:auto; background-color:#e8efff; margin: 5%">
+<div class="container-personal-info" style="text-align: center; background-color:#e8efff; width: 100%; height: 100%">
     <br>
-    <br>Benutzername:<br>
-   <strong>Logging in ...</strong>
+      <i class="fa fa-spinner fa-spin" style="font-size:50px;"></i>
     <br>
     <br>
     <br>

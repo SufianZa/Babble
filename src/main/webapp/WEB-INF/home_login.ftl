@@ -1,4 +1,6 @@
-<html><head>
+<html>
+<head>
+    <link href="http://designers.hubspot.com/hs-fs/hub/327485/file-2054199286-css/font-awesome.css" rel="stylesheet">
     <title>Login</title>
 </head>
 <!-- Header Welcome-->
@@ -14,8 +16,8 @@
 
     <form action="/redirect">
         <p>Benutzername</p>
-        <input type="text" name="sessionID" value="">
-        <input type="submit" value="Login">
+        <input id="user" type="text" name="sessionID" value="">
+        <input type="submit" value="Login" onClick="return empty()">
     </form>
     <br>
     <br>
@@ -26,14 +28,7 @@
 
 
 <style>
-    .container-personal-info > div {
-        width: 100%;
-        margin-top: 5px;
-
-    }
-
     .container-personal-info {
-
         margin-top: 10px;
         text-align: center;
         height: 100%;
@@ -93,3 +88,13 @@
         line-height: 26.4px;
     }
 </style></body></html>
+<script>
+function empty() {
+    var x;
+    x = document.getElementById("user").value;
+    if (x == "") {
+        alert("Enter a valid username");
+        return false;
+    }
+}
+</script>

@@ -15,7 +15,7 @@ public class Search_Page extends HttpServlet {
         String sessionId = (String) session.getAttribute("sessionID");
         searcbed = request.getParameter("searched");
 
-        request.setAttribute("sreachedfor ",searcbed );
+        request.setAttribute("ss"," y");
         searcbed ="";
         request.setAttribute("loggedUser",sessionId);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search_page.ftl");

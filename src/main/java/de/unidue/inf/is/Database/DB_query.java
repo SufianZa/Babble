@@ -2,6 +2,8 @@ package de.unidue.inf.is.Database;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,10 +17,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import de.unidue.inf.is.domain.Block;
 import de.unidue.inf.is.domain.User;
 import de.unidue.inf.is.utils.DBUtil;
 import de.unidue.inf.is.domain.Babble;
+import org.apache.commons.io.IOUtils;
 import org.omg.IOP.TransactionService;
 
 
@@ -295,7 +299,7 @@ public final class DB_query implements Closeable {
 
     public void Dislike(int babbleid, String username) {
 
-        try(PreparedStatement preparedStatement = connection.prepareStatement("insert into LikesBabble (user, babble ,type) values (?, ?, 'dislike')")){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into LikesBabble (user, babble ,type) values (?, ?, 'dislike')")) {
             preparedStatement.setString(1, username);
             preparedStatement.setInt(2, babbleid);
             preparedStatement.executeUpdate();
@@ -317,7 +321,7 @@ public final class DB_query implements Closeable {
 
     }
 
-//TODO Sufian
+    //TODO Sufian
     public void follow(String he_who_follows, String he_who_is_followed) {
 
         try {
@@ -352,12 +356,46 @@ public final class DB_query implements Closeable {
     }
 
     public Block isBlocked(String blocker, String blockee) {
-        return null;
+        Block block = new Block();
+        String selectSQL = "SELECT reason FROM dbp66.Blocks WHERE Blocker = ? and Blockee=?";
+        try (PreparedStatement ps = connection.prepareStatement(selectSQL)) {
+            ps.setString(1, blocker);
+            ps.setString(2, blockee);
+            try(ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String reason = rs.getString(1);
+                    block.setReason(reason);
+                    block.setState(true);
+                    System.out.println(reason);
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return block;
     }
 
 
     public boolean isFollowed(String follower, String followee) {
-        return true;
+
+        String selectSQL = "SELECT * FROM dbp66.Follows WHERE follower = ? and followee=?";
+        try (PreparedStatement ps = connection.prepareStatement(selectSQL)) {
+            ps.setString(1, follower);
+            ps.setString(2, followee);
+
+            try(ResultSet rs = ps.executeQuery()) {
+            if(rs.next()){
+                System.out.println(follower+" Follows "+followee);
+                return true;
+            }
+            }catch (SQLException e){
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
     //TODO Sufian
 
@@ -401,7 +439,14 @@ public final class DB_query implements Closeable {
             }
         }
     }
-    
+
+    public String clobAsString(Clob clob) throws SQLException, IOException {
+        InputStream in = clob.getAsciiStream();
+        StringWriter w = new StringWriter();
+        IOUtils.copy(in, w);
+        String clobAsString = w.toString();
+        return clobAsString;
+    }
     
    /* 
     /*********************************************************************************************
