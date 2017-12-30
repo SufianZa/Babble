@@ -5,18 +5,12 @@ import de.unidue.inf.is.domain.Babble;
 import de.unidue.inf.is.domain.Block;
 import de.unidue.inf.is.domain.User;
 import de.unidue.inf.is.stores.UserStore;
-import org.apache.commons.net.util.Base64;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -32,7 +26,6 @@ public final class Profile_View extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static List<Babble> babbles = new ArrayList<>();
-    private static List<User> userlist = new ArrayList<>();
     private String blockState = "Block";
     private String followState = "Follow";
     private String blockedContent = "default";
@@ -40,14 +33,11 @@ public final class Profile_View extends HttpServlet {
     static {
         babbles.add(new Babble(5,"Peace ♥ ",new Timestamp(System.currentTimeMillis()),"Sufian",0,58,20));
         babbles.add(new Babble(2,"I hate u all",new Timestamp(System.currentTimeMillis()),"wisee",55,3,1));
-
-        userlist.add(new User("Sufian","SufianZa","Hello im usering babble","no Pic"));
-        userlist.add(new User("Mark","Markus","my life sucks","no Pic"));
-
     }
 
     DB_query db_query = new DB_query();
-    
+    User eingeloggter_user;
+    User besuchter_user;
 
 
 
@@ -66,24 +56,25 @@ public final class Profile_View extends HttpServlet {
         String profile = url.substring(url.lastIndexOf("/")+1);
         request.setAttribute("profile",profile);
 
-        //create logged in user and  user of the visited profile page
-        User eingeloggter_user= db_query.getUser(sessionID);
-        User besuchter_user= db_query.getUser(profile);
 
-        System.out.println("logged in as " + sessionID);
-        System.out.println("profile page of " + profile);
+        //create logged in user and user of the visited profile page
+         eingeloggter_user = db_query.getUser(sessionID);
+         besuchter_user = db_query.getUser(profile);
+
+
         request.setAttribute("babble", babbles);
-        request.setAttribute("blockContent",blockedContent);
+        request.setAttribute("blockContent",this.blockedContent);
+
         //check if logged in user is NOT visiting his own profile page
         if(!eingeloggter_user.getUsername().equals(besuchter_user.getUsername())){
             Block b_Blocks_a  = db_query.isBlocked(besuchter_user.getUsername(),eingeloggter_user.getUsername());
             Block a_Blocks_b  = db_query.isBlocked(eingeloggter_user.getUsername(),besuchter_user.getUsername());
-            if(b_Blocks_a.isBlocked()){
+            if(b_Blocks_a.getBlockState()){
                 this.blockedContent = "blocked";
                 request.setAttribute("blockContent",  this.blockedContent);
                 request.setAttribute("reason", b_Blocks_a.getReason());
             }
-            if(a_Blocks_b.isBlocked()){
+            if(a_Blocks_b.getBlockState()){
                 this.blockState = "Unblock";
             }
 
@@ -112,5 +103,28 @@ public final class Profile_View extends HttpServlet {
         this.blockState ="Block";
         this.blockedContent="default";
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("act");
+        String reason = req.getParameter("reason");
+
+        switch (action){
+            case "Follow":
+                db_query.follow(eingeloggter_user.getUsername(),besuchter_user.getUsername());
+                break;
+            case "Unfollow":
+                db_query.unfollow(eingeloggter_user.getUsername(),besuchter_user.getUsername());
+                break;
+            case "Block":
+                db_query.block(eingeloggter_user.getUsername(),besuchter_user.getUsername(),reason);
+                break;
+            case "Unblock":
+                db_query.unblock(eingeloggter_user.getUsername(),besuchter_user.getUsername());
+                break;
+                default:
+        }
+    }
+
 }
 

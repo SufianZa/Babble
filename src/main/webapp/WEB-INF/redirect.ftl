@@ -4,9 +4,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <meta http-equiv="refresh" content="0; URL='/profile_view/${userProfile}'"/>
 </head>
-    <title>Login</title>
+<title>Login</title>
 
-    <!-- Header Welcome-->
+<!-- Header Welcome-->
 <body>
 <ul class="ul-head">
     <li class="head" style=" margin: 6%; font-size: 40px;"><a href="/">Welcome to Babble</a></li>
@@ -15,7 +15,7 @@
 <!-- Login Information-->
 <div class="container-personal-info" style="text-align: center; background-color:#e8efff; width: 100%; height: 100%">
     <br>
-      <i class="fa fa-spinner fa-spin" style="font-size:50px;"></i>
+    <i class="fa fa-spinner fa-spin" style="font-size:70px; margin: 100px; color: #1f669c"></i>
     <br>
     <br>
     <br>
@@ -48,6 +48,7 @@
           padding: 14px 16px;
           text-decoration: none;
       }
+
       body {
           font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
           font-size: 18px;
