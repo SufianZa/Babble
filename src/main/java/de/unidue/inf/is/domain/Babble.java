@@ -2,7 +2,7 @@ package de.unidue.inf.is.domain;
 
 import java.sql.Timestamp;
 
-public class Babble {
+public class Babble implements Comparable<Babble> {
     private String inhalt="";
     private String activity="";
     private Timestamp datum;
@@ -90,6 +90,11 @@ public class Babble {
     public String timestampasstring(){
         return datum.toString();
     }
+    
+    public int compareTo(Babble b){
+		return getDatum().compareTo(b.getDatum());
+		
+	}
 
 }
 

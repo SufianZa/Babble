@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
 import de.unidue.inf.is.domain.Block;
@@ -425,7 +426,9 @@ public final class DB_query implements Closeable {
 		} catch(SQLException e){
 			e.printStackTrace();
 		}
-        return result;
+		
+		Collections.sort(result);
+		return result;
     }
 
 
