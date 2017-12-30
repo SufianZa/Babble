@@ -1,17 +1,19 @@
 <html>
 <head>
     <link href="http://designers.hubspot.com/hs-fs/hub/327485/file-2054199286-css/font-awesome.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>Profile</title>
 </head>
-    <!-- Header Tools-->
+<!-- Header Tools-->
 <body>
 <ul class="ul-head">
 
 <#if "${loggedUser}"!="${profile}">
-    <li class="head" style="float: right"><a href="${blockState}">${blockState}</a></li>
-    <li class="head" style="float: right"><a href="${followState}">${followState}</a></li>
+    <li class="head" style="float: right"><a class="block_follow" href="">${blockState}</a></form></li>
+    <li class="head" style="float: right"><a class="block_follow" href="">${followState}</a></li>
 </#if>
-    <li class="head" style="float: left"><a href="../search"> <i class="fa fa-search" aria-hidden="true"></i> Search Babble</a></li>
+    <li class="head" style="float: left"><a href="../search"> <i class="fa fa-search" aria-hidden="true"></i> Search
+        Babble</a></li>
     <li class="head"><a href="${loggedUser}"><i class="fa fa-home" aria-hidden="true"></i> ${loggedUser}</a></li>
 </ul>
 
@@ -23,42 +25,45 @@
     <div>Name : ${name} </div>
     <div>Status : ${status} </div>
 </div>
-<body>
 
 <!--new Babble-->
 <ul class="ul-head">
-    <li class="head" style="float: right"><a href="#">New Babble</a></li>
+    <li class="head" style="float: right"><a href="../create">New Babble</a></li>
 </ul>
 <!-- Timeline -->
 <#if "${blockContent}" == "blocked">
     <div class="container" style="width: 100%;min-width: 200px;">
         <ul style="list-style-type: none;">
-        <li>
-                <fieldset style="min-height: 100px; background: #c9d4fe; border-radius: 5px; padding-right: 150px border-color: transparent">
-                    <p>
+            <li style="padding-right: 20%; padding-left: 20%;">
+                <fieldset
+                        style="background: #c9d4fe; border-radius: 5px; padding-right: 150px border-color: transparent">
+                    <strong>
                         you are blocked
-                    </p>
+                    </strong>
                     <div> Reason: <i>"${reason}"</i></div>
-            </fieldset>
-        </li>
+                </fieldset>
+            </li>
         </ul>
     </div>
 <#else>
 <div class="container" style="width: 100%;min-width: 200px;">
     <ul style="list-style-type: none;">
     <#list babble as bab>
-        <li id="" style="padding-right: 7cm; padding-left: 5cm; margin-bottom: 20px">
+        <li id="" style="padding-right: 20%; padding-left: 20%; margin-bottom: 20px">
             <fieldset href="#" style="background: #ececf2; border-color: #1f669c">
-                <legend> <a href="/profile_view/${bab.author}">${bab.author}</a></legend>
+                <legend><a href="/profile_view/${bab.author}">${bab.author}</a></legend>
                 <fieldset style="min-height: 100px; background: #c9d4fe; border-radius: 5px; border-color: transparent">
                     <p>
                         ${bab.inhalt}
                     </p>
                 </fieldset>
                 <p style="font-size: 18">
-                    <i class="fa fa-thumbs-up" aria-hidden="true" style="color:#305a80; margin-left: 20px"></i>   <label>${bab.likes}</label>
-                    <i class="fa fa-thumbs-down" aria-hidden="true" style="color:#8b0008;margin-left: 20px"></i>  <label>${bab.dislikes}<label>
-                    <i class="fa fa-share" aria-hidden="true" style="color:#348037;margin-left: 20px"></i> <label>${bab.shared}</label>
+                    <i class="fa fa-thumbs-up" aria-hidden="true" style="color:#305a80; margin-left: 20px"></i>
+                    <label>${bab.likes}</label>
+                    <i class="fa fa-thumbs-down" aria-hidden="true" style="color:#8b0008;margin-left: 20px"></i>
+                    <label>${bab.dislikes}<label>
+                        <i class="fa fa-share" aria-hidden="true" style="color:#348037;margin-left: 20px"></i>
+                        <label>${bab.shared}</label>
                 </p>
                 <p align="right" style="font-size: 11px">
                     ${bab.datum}
@@ -121,10 +126,27 @@
         text-align: center;
         text-decoration: none;
         display: inline-block;
+        border-radius: 10px;
     }
-
 
     legend a:hover, a:active {
         background-color: #154165;
     }
 </style>
+
+<script>
+
+    $(".block_follow").on("click", function (e) {
+        var action = $(this).text();
+        var reason = "";
+        if (action === 'Block') {
+             reason = prompt("Reason :", "");
+        }
+        e.preventDefault(); // cancel the link itself
+        var data = {act: action, reason: reason};
+        $.post(this.href, data, function () {
+            $(".block_follow").html();
+        });
+        location.reload();
+    });
+</script>

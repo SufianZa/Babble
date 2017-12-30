@@ -39,54 +39,32 @@ public final class DB_query implements Closeable {
             connection.setAutoCommit(false);
 
         } catch (SQLException e) {
-            //throw new DBTransException(e);
-            // Mach was hier!!
-
-            System.err.println("Constructor failed");
-            System.err.println("SQLState: " + e.getSQLState());
-            System.err.println("Error Code: " + e.getErrorCode());
-            System.err.println("Message: " + e.getMessage());
-
+            e.printStackTrace();
         }
     }
-
-    //Get personal information
-
-    //Get timeline activity ...
 
 
     public User getUser(String username_i) throws DBTransException {
 
         User searchFor = new User();
 
-        String new_name = new String(username_i);
-
-        //String
-        try {
-
-            String selectSQL = "SELECT username, name, status, foto FROM dbp66.BabbleUser WHERE username = ?";
-            PreparedStatement ps = connection.prepareStatement(selectSQL); //Im Moment ist connection null
+        String selectSQL = "SELECT username, name, status, foto FROM dbp66.BabbleUser WHERE username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(selectSQL)) {
             ps.setString(1, username_i);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-
-                searchFor.setUsername(rs.getString(1));
-                searchFor.setName(rs.getString(2));
-                searchFor.setStatus(rs.getString(3));
-                searchFor.setImage_path(rs.getString(4));
-            } else {  //Überlegen was, wenn es den Benutzer nicht gibt
-
-                searchFor.setUsername("DKnuth1");
-                searchFor.setName("Donald Knuth else");
-                searchFor.setStatus("Hallo Welt");
-                searchFor.setImage_path(" ");
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    searchFor.setUsername(rs.getString(1));
+                    searchFor.setName(rs.getString(2));
+                    searchFor.setStatus(rs.getString(3));
+                    searchFor.setImage_path(rs.getString(4));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return searchFor;
-
     }
 
     public void addUser(User userToAdd) {
@@ -96,6 +74,7 @@ public final class DB_query implements Closeable {
             preparedStatement.setString(2, userToAdd.getName());
             preparedStatement.setString(3, userToAdd.getStatus());
             preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             //throw new DBTransException(e);
             System.err.println("SQLState: " + e.getSQLState());
@@ -169,18 +148,15 @@ public final class DB_query implements Closeable {
     }
 
 
-    public void makeBabble(String username, String text) {
-
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into Babble (text,creator) values (?, ?)");
-            preparedStatement.setString(1, text);
-            preparedStatement.setString(2, username);
+    public void makeBabble(Babble babble) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into dbp66.Babble (creator,text) values (?, ?)")) {
+            preparedStatement.setString(1, babble.getAuthor());
+            preparedStatement.setString(2, babble.getInhalt());
             preparedStatement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
-            //throw new DBTransException(e);
+            e.printStackTrace();
         }
-
-
     }
 
     public int getLikes(int id) {
@@ -322,37 +298,58 @@ public final class DB_query implements Closeable {
     }
 
     //TODO Sufian
-    public void follow(String he_who_follows, String he_who_is_followed) {
-
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into Follows (follower, followee) values (?, ?)");
-            preparedStatement.setString(1, he_who_follows);
-            preparedStatement.setString(2, he_who_is_followed);
+    public void follow(String follower, String followee) {
+        String sql = "insert into dbp66.Follows (follower, followee) values (?, ?)";
+        Block block = isBlocked(follower,followee);
+        if(!block.getBlockState()){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, follower);
+            preparedStatement.setString(2, followee);
             preparedStatement.executeUpdate();
+            connection.commit();
+            System.err.println(follower + " has followed " + followee);
         } catch (SQLException e) {
-            //throw new DBTransException(e);
+            e.printStackTrace();
         }
-
+        }
     }
 
-    public void unfollow(String he_who_follows, String he_who_is_followed) {
-
+    public void unfollow(String follower, String followee) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM dbp66.Follows  WHERE follower = ? and followee=?")) {
+            preparedStatement.setString(1, follower);
+            preparedStatement.setString(2, followee);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            System.err.println(follower + " has unfollowed " + followee);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void block(String blocker, String blockee) {
+    public void block(String blocker, String blockee, String reason) {
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into Blocks (blocker, blockee) values (?, ?)");
+        try (PreparedStatement preparedStatement = connection.prepareStatement("insert into dbp66.Blocks (blocker, blockee, reason) values (?, ?,?)")) {
             preparedStatement.setString(1, blocker);
             preparedStatement.setString(2, blockee);
+            preparedStatement.setString(3, reason);
             preparedStatement.executeUpdate();
+            connection.commit();
+            System.err.println(blocker + " has blocked " + blockee + " reason " + reason);
         } catch (SQLException e) {
-            //throw new DBTransException(e);
+            e.printStackTrace();
         }
     }
 
     public void unblock(String blocker, String blockee) {
-
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM dbp66.Blocks where blocker=? AND blockee=?")) {
+            preparedStatement.setString(1, blocker);
+            preparedStatement.setString(2, blockee);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            System.err.println(blocker + " has unblocked " + blockee);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Block isBlocked(String blocker, String blockee) {
@@ -361,14 +358,14 @@ public final class DB_query implements Closeable {
         try (PreparedStatement ps = connection.prepareStatement(selectSQL)) {
             ps.setString(1, blocker);
             ps.setString(2, blockee);
-            try(ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     String reason = rs.getString(1);
                     block.setReason(reason);
                     block.setState(true);
                     System.out.println(reason);
                 }
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -385,12 +382,12 @@ public final class DB_query implements Closeable {
             ps.setString(1, follower);
             ps.setString(2, followee);
 
-            try(ResultSet rs = ps.executeQuery()) {
-            if(rs.next()){
-                System.out.println(follower+" Follows "+followee);
-                return true;
-            }
-            }catch (SQLException e){
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println(follower + " Follows " + followee);
+                    return true;
+                }
+            } catch (SQLException e) {
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -427,7 +424,6 @@ public final class DB_query implements Closeable {
         if (connection != null) {
             try {
                 connection.commit();
-
             } catch (SQLException e) {
                 throw new DBTransException(e);
             } finally {
@@ -440,13 +436,6 @@ public final class DB_query implements Closeable {
         }
     }
 
-    public String clobAsString(Clob clob) throws SQLException, IOException {
-        InputStream in = clob.getAsciiStream();
-        StringWriter w = new StringWriter();
-        IOUtils.copy(in, w);
-        String clobAsString = w.toString();
-        return clobAsString;
-    }
     
    /* 
     /*********************************************************************************************

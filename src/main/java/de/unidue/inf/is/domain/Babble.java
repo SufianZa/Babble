@@ -12,6 +12,11 @@ public class Babble {
     private int dislikes=0;
     private int shared=0;
 
+    public Babble(String author,String inhalt){
+        this.author = author;
+        this.inhalt = inhalt;
+    }
+
     public Babble(int id, String inhalt, Timestamp datum, String author,int likes,int dislikes, int shared){
         this.id= id;
         this.datum = datum;

@@ -99,6 +99,15 @@
         <url-pattern>/search</url-pattern>
     </servlet-mapping>
 
+	<servlet>
+		<servlet-name>create_babble</servlet-name>
+		<servlet-class>de.unidue.inf.is.Create_Babble</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>create_babble</servlet-name>
+		<url-pattern>/create</url-pattern>
+	</servlet-mapping>
 
 	<!-- Prevent the visiting of MVC Views from outside the servlet container.
 		RequestDispatcher.forward/include should and will still work. Removing this
