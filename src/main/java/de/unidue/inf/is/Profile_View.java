@@ -29,15 +29,19 @@ public final class Profile_View extends HttpServlet {
     private String blockState = "Block";
     private String followState = "Follow";
     private String blockedContent = "default";
+    
+    DB_query db_query = new DB_query();
+    User eingeloggter_user;
+    User besuchter_user;
+    
 
     static {
         babbles.add(new Babble(5,"Peace ♥ ",new Timestamp(System.currentTimeMillis()),"Sufian",0,58,20));
         babbles.add(new Babble(2,"I hate u all",new Timestamp(System.currentTimeMillis()),"wisee",55,3,1));
     }
 
-    DB_query db_query = new DB_query();
-    User eingeloggter_user;
-    User besuchter_user;
+    
+ 
 
 
 
@@ -50,8 +54,15 @@ public final class Profile_View extends HttpServlet {
         session.setAttribute("sessionID",sessionID);
         request.setAttribute("loggedUser",sessionID);
 
-
-        //get the profile page after clicking a name
+		ArrayList<Babble> test = db_query.getTimeLine("dbuser");
+		//Im Moment gibt eingeloggter_user.getUsername() noch null zurück..
+		//getTimeLine funktioniert jetzt.
+		if(test != null){
+			babbles = test;
+		}
+		
+		
+		//get the profile page after clicking a name
         StringBuffer url = request.getRequestURL();
         String profile = url.substring(url.lastIndexOf("/")+1);
         request.setAttribute("profile",profile);
@@ -64,6 +75,8 @@ public final class Profile_View extends HttpServlet {
 
         request.setAttribute("babble", babbles);
         request.setAttribute("blockContent",this.blockedContent);
+        
+        
 
         //check if logged in user is NOT visiting his own profile page
         if(!eingeloggter_user.getUsername().equals(besuchter_user.getUsername())){
@@ -84,6 +97,8 @@ public final class Profile_View extends HttpServlet {
             }
             request.setAttribute("followState",  this.followState);
         }
+        
+        
 
 
         request.setAttribute("name",besuchter_user.getName());

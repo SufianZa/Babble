@@ -404,7 +404,28 @@ public final class DB_query implements Closeable {
 
 
     public ArrayList<Babble> getTimeLine(String username) {
-        return null;
+		
+		ArrayList<Babble> result = new ArrayList<>();
+		
+		try (PreparedStatement ps = connection.prepareStatement("select b.id from dbp66.babble b where b.creator = ? union select b.id from dbp66.babble b, dbp66.likesbabble lb where lb.user = ? and lb.babble = b.id and lb.type = 'like' union select b.id from dbp66.babble b, dbp66.rebabble rb where rb.user = ? and rb.babble = b.id")){
+			ps.setString(1, username);
+            ps.setString(2, username);
+            ps.setString(3, username);
+            
+            try(ResultSet rs = ps.executeQuery()) {
+				
+					while(rs.next()){
+							result.add(this.getBabble(rs.getInt(1)));
+						}
+					
+				} catch(SQLException e){
+					e.printStackTrace();
+				}
+					
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+        return result;
     }
 
 
