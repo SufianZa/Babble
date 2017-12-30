@@ -4,18 +4,9 @@ public final class User {
 
     private String username;
     private String name;
-
     private String status;
-
     private String image_path;
 
-
-    public User(String username) {
-        this.username = username;
-        name = " ";
-        status = " ";
-        image_path = " ";
-    }
 
     public User(String username, String name, String Status, String image_path){
         this.username = username;
@@ -25,28 +16,23 @@ public final class User {
     }
 
     public User() {
-		username = " ";
-        name = " ";
-        status = " ";
-        image_path = " ";
-
     }
 
 
     public String getUsername() {
-        return new String(username);
+        return this.username;
     }
 
     public String getStatus() {
-        return new String(status);
+        return this.status;
     }
 
     public String getName() {
-        return new String(name);
+        return this.name;
     }
 
     public String getImage_path() {
-        return new String(image_path);
+        return this.image_path;
     }
 
     public void setUsername(String username){
