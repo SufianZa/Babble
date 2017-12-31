@@ -161,109 +161,61 @@ public final class DB_query implements Closeable {
     }
 
     public int getLikes(int id) {
-
-        int likes = 0;
-
-
+		int likes = 0;
         try {
 
             String selectSQL = "SELECT count(user) FROM dbp66.likesbabble WHERE babble = ? and type='like' ";
             PreparedStatement ps = connection.prepareStatement(selectSQL);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-
-
             if (rs.next()) {
-
-                likes = rs.getInt(1);
-                
-                //System.err.println("Was ist hier los? : " + likes);
-                
+				likes = rs.getInt(1);
                 return likes;
-
             } else {  //Überlegen was, wenn es den Benutzer nicht gibt
-
                 likes = 0;
-
             }
-
         } catch (SQLException e) {
-			
 			e.printStackTrace();
-
             likes = 0;
-
         }
-
-
         return likes;
     }
 
     public int getDislikes(int id) {
-
         int dislikes;
-
-
         try {
-
             String selectSQL = "SELECT count(user) FROM likesbabble WHERE babble = ? and type='dislike'";
             PreparedStatement ps = connection.prepareStatement(selectSQL);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-
-
             if (rs.next()) {
-
                 dislikes = rs.getInt(1);
-
             } else {  //Überlegen was, wenn es den Benutzer nicht gibt
-
                 dislikes = 0;
-
             }
-
         } catch (SQLException e) {
-
             dislikes = 0;
-
         }
-
-
         return dislikes;
     }
 
 
     public int getRebabbles(int id) {
-
         int rebabbles;
-
-
         try {
-
             String selectSQL = "SELECT count(user) FROM rebabble WHERE babble = ?";
             PreparedStatement ps = connection.prepareStatement(selectSQL);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-
-
             if (rs.next()) {
-
                 rebabbles = rs.getInt(1);
-
             } else {  //Überlegen was, wenn es den Benutzer nicht gibt
-
                 rebabbles = 0;
-
             }
-
         } catch (SQLException e) {
-
             rebabbles = 0;
-
         }
-
         return rebabbles;
-
     }
 
 
@@ -433,10 +385,26 @@ public final class DB_query implements Closeable {
 
 
     public ArrayList<Babble> getSearch(String searchTerm, String user) {
-        String sql = "SELECT id, text,created, creator from dbp66.babble where text like %?%";
-
-
-        return null;
+        
+        ArrayList<Babble> result = new ArrayList<>();
+        try(PreparedStatement ps = connection.prepareStatement("SELECT id, text,created, creator from dbp66.babble where text like %?%")){
+			ps.setString(1, searchTerm);
+			
+			try(ResultSet rs = ps.executeQuery()){
+				
+				while(rs.next()){
+					String writer = rs.getString(3);
+					if(!isBlocked(user, writer).getBlockState()){
+						result.add(new Babble(rs.getInt(1), rs.getString(2), rs.getTimestamp(3), rs.getString(4), getLikes(rs.getInt(1)), getDislikes(rs.getInt(1)), getRebabbles(rs.getInt(1))));
+					}
+				}
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
+		} catch(SQLException e){
+				e.printStackTrace();
+		}
+        return result;
     }
 
 
@@ -467,44 +435,5 @@ public final class DB_query implements Closeable {
     }
 
     
-   /* 
-    /*********************************************************************************************
- * From CLOB to String
- * @return string representation of clob
- *********************************************************************************************/
-    //Dieser Code ist von https://stackoverflow.com/questions/2169732/most-efficient-solution-for-reading-clob-to-string-and-string-to-clob-in-java übernommen
-    //Dort wurde er vom Benutzer Stan Sokolov veröffentlicht
- /*
-private String clobToString(java.sql.Clob data)
-{
-    final StringBuilder sb = new StringBuilder();
-
-    try
-    {
-        final Reader         reader = data.getCharacterStream();
-        final BufferedReader br     = new BufferedReader(reader);
-
-        int b;
-        while(-1 != (b = br.read()))
-        {
-            sb.append((char)b);
-        }
-
-        br.close();
-    }
-    catch (SQLException e)
-    {
-        log.error("SQL. Could not convert CLOB to string",e);
-        return e.toString();
-    }
-    catch (IOException e)
-    {
-        log.error("IO. Could not convert CLOB to string",e);
-        return e.toString();
-    }
-
-    return sb.toString();
-}
-    */
 
 }
