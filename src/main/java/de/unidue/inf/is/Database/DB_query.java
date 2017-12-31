@@ -23,6 +23,7 @@ import de.unidue.inf.is.domain.Block;
 import de.unidue.inf.is.domain.User;
 import de.unidue.inf.is.utils.DBUtil;
 import de.unidue.inf.is.domain.Babble;
+import de.unidue.inf.is.domain.Babble_with_interaction;
 import org.apache.commons.io.IOUtils;
 import org.omg.IOP.TransactionService;
 
@@ -356,19 +357,51 @@ public final class DB_query implements Closeable {
     //TODO Sufian
 
 
-    public ArrayList<Babble> getTimeLine(String username) {
+    public ArrayList<Babble_with_interaction> getTimeLine(String username) {
 		
-		ArrayList<Babble> result = new ArrayList<>();
+		ArrayList<Babble_with_interaction> result = new ArrayList<>();
 		
-		try (PreparedStatement ps = connection.prepareStatement("select b.id from dbp66.babble b where b.creator = ? union select b.id from dbp66.babble b, dbp66.likesbabble lb where lb.user = ? and lb.babble = b.id and lb.type = 'like' union select b.id from dbp66.babble b, dbp66.rebabble rb where rb.user = ? and rb.babble = b.id")){
+		try (PreparedStatement ps = connection.prepareStatement("select b.id from dbp66.babble b where b.creator = ?")){
 			ps.setString(1, username);
-            ps.setString(2, username);
-            ps.setString(3, username);
             
             try(ResultSet rs = ps.executeQuery()) {
 				
 					while(rs.next()){
-							result.add(this.getBabble(rs.getInt(1)));
+							result.add(new Babble_with_interaction(this.getBabble(rs.getInt(1)), "created"));
+						}
+					
+				} catch(SQLException e){
+					e.printStackTrace();
+				}
+					
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		try (PreparedStatement ps = connection.prepareStatement("select b.id from dbp66.babble b, dbp66.likesbabble lb where lb.user = ? and lb.babble = b.id and lb.type = 'like'")){
+			ps.setString(1, username);
+            
+            try(ResultSet rs = ps.executeQuery()) {
+				
+					while(rs.next()){
+							result.add(new Babble_with_interaction(this.getBabble(rs.getInt(1)), "likes"));
+						}
+					
+				} catch(SQLException e){
+					e.printStackTrace();
+				}
+					
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		try (PreparedStatement ps = connection.prepareStatement("select b.id from dbp66.babble b, dbp66.rebabble rb where rb.user = ? and rb.babble = b.id")){
+			ps.setString(1, username);
+            
+            try(ResultSet rs = ps.executeQuery()) {
+				
+					while(rs.next()){
+							result.add(new Babble_with_interaction(this.getBabble(rs.getInt(1)), "rebabbled"));
 						}
 					
 				} catch(SQLException e){

@@ -54,12 +54,14 @@ public final class Profile_View extends HttpServlet {
         session.setAttribute("sessionID",sessionID);
         request.setAttribute("loggedUser",sessionID);
 
+		/*
 		ArrayList<Babble> test = db_query.getTimeLine("dbuser");
 		//Im Moment gibt eingeloggter_user.getUsername() noch null zurück..
 		//getTimeLine funktioniert jetzt.
 		if(test != null){
 			babbles = test;
 		}
+		* */
 		
 		
 		//get the profile page after clicking a name
