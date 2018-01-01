@@ -450,7 +450,7 @@ public final class DB_query implements Closeable {
                 try (ResultSet rs = ps.executeQuery()) {
 
                     while (rs.next()) {
-                        String writer = rs.getString(3);
+                        String writer = rs.getString(4);
                         if (!isBlocked(user, writer).getBlockState()) {
                             result.add(new Babble(rs.getInt(1), rs.getString(2), rs.getTimestamp(3), rs.getString(4), getNumber(rs.getInt(1),"likes"), getNumber(rs.getInt(1),"dislikes"), getNumber(rs.getInt(1),"rebabbles")));
                         }
