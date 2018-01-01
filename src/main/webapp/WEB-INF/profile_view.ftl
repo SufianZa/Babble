@@ -85,6 +85,15 @@
 <hr>
 <ul style="list-style-type: none;">
     <#list friends_babble as bab>
+		<div style="border-radius: 10px;background: #eeeeee;padding-left: 10px;padding-right: 10px;margin-bottom: 10px ;margin-left: 15%;margin-right: 60%; font-size: 14; color: #909090">
+			<#if "${profile}" == "${loggedUser}">
+            <span>  You follow ${bab.author} and he wrote:</span>
+            <#else>
+            <span> ${profile} follow ${bab.author} and he wrote:</span>
+            </#if>
+            
+            
+        </div>
 
         <li style="padding-right: 20%; padding-left: 20%; margin-bottom: 20px">
             <fieldset style="background: #ececf2; border-color: #1f669c; border-radius: 20px">
