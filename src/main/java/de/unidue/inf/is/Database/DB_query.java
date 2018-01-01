@@ -136,7 +136,6 @@ public final class DB_query implements Closeable {
                         String author = rs.getString(4);
 
                         return new Babble(the_id, babble_content, new_Stamp, author, getNumber(the_id,"likes"), getNumber(the_id,"dislikes"), getNumber(the_id,"rebabbles"));
-
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -145,7 +144,7 @@ public final class DB_query implements Closeable {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return new Babble();
+            return null;
         }
 
         public void makeBabble (Babble babble){

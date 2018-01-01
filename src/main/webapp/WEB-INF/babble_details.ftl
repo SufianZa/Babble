@@ -155,9 +155,8 @@
 <script>
     $('#group > input[type=submit]').on("click", function (e) {
         var action = $(this).val();
-        var state = $(this).attr("state");
         e.preventDefault(); // cancel the link itself
-        var data = {act: action, state:state};
+        var data = {act: action};
         $.post(this.href, data, function () {
             location.reload()
         });

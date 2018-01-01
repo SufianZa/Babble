@@ -89,7 +89,7 @@
 			<#if "${profile}" == "${loggedUser}">
             <span>  You follow ${bab.author} and he wrote:</span>
             <#else>
-            <span> ${profile} follow ${bab.author} and he wrote:</span>
+            <span> ${profile} follows ${bab.author} and he wrote:</span>
             </#if>
             
             
