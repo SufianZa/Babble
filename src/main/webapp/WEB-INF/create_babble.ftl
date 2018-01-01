@@ -2,7 +2,7 @@
 <head>
     <link href="http://designers.hubspot.com/hs-fs/hub/327485/file-2054199286-css/font-awesome.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <title>Profile</title>
+    <title>Create a Babble</title>
 </head>
 <!-- Header Tools-->
 <body>
@@ -16,9 +16,9 @@
 <!--new Babble-->
         <div style="padding-right: 30%; padding-left: 30%; text-align: center; margin-top: 10%; margin-bottom: 5%; ">
             <form action="/create" method="post">
-            <fieldset style="background: #ececf2; border-color: #1f669c">
+            <fieldset style="background: #ececf2; border-color: #1f669c; border-radius: 20px">
                 <legend><a href="/profile_view/${loggedUser}">${loggedUser}</a></legend>
-                <fieldset style="min-height: 100px; background: #c9d4fe; border-radius: 5px; border-color: transparent; height: ">
+                <fieldset style="min-height: 50px; background: #c9d4fe; border-radius: 5px; margin-bottom: 7px; border-color: transparent">
                         <textarea id="babbleText" name="babble" cols="40" rows="5"></textarea>
                 </fieldset>
             </fieldset>
@@ -94,17 +94,19 @@
     legend a:link, a:visited {
         background-color: #1f669c;
         color: white;
-        padding: 2px;
+        padding: 1px;
         text-align: center;
+        font-size: 14px;
         text-decoration: none;
-        border-radius: 10px;
         display: inline-block;
+        border-radius: 4px;
     }
 
     legend a:hover, a:active {
         background-color: #154165;
     }
 </style>
+
 <script>
     function empty() {
         var x;

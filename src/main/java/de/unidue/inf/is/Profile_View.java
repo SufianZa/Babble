@@ -54,14 +54,12 @@ public final class Profile_View extends HttpServlet {
         session.setAttribute("sessionID",sessionID);
         request.setAttribute("loggedUser",sessionID);
 
-		/*
-		ArrayList<Babble> test = db_query.getTimeLine("dbuser");
+
+
 		//Im Moment gibt eingeloggter_user.getUsername() noch null zurück..
-		//getTimeLine funktioniert jetzt.
-		if(test != null){
-			babbles = test;
-		}
-		* */
+		//getInteraction funktioniert jetzt.
+
+
 		
 		
 		//get the profile page after clicking a name
@@ -74,11 +72,16 @@ public final class Profile_View extends HttpServlet {
          eingeloggter_user = db_query.getUser(sessionID);
          besuchter_user = db_query.getUser(profile);
 
+         //get all activities
+        ArrayList<Babble> own_babble = db_query.getOwnBabble(besuchter_user.getUsername());
+        ArrayList<Babble> friends_babble = db_query.getFriendsBabbles(besuchter_user.getUsername());
+        ArrayList<Babble> interaction_babble = db_query.getInteraction(besuchter_user.getUsername());
 
-        request.setAttribute("babble", babbles);
+        request.setAttribute("own_babble", own_babble);
+        request.setAttribute("friends_babble", friends_babble);
+        request.setAttribute("interaction_babble", interaction_babble);
+
         request.setAttribute("blockContent",this.blockedContent);
-        
-        
 
         //check if logged in user is NOT visiting his own profile page
         if(!eingeloggter_user.getUsername().equals(besuchter_user.getUsername())){
@@ -99,17 +102,10 @@ public final class Profile_View extends HttpServlet {
             }
             request.setAttribute("followState",  this.followState);
         }
-        
-        
-
 
         request.setAttribute("name",besuchter_user.getName());
         request.setAttribute("status",besuchter_user.getStatus());
         request.setAttribute("username", besuchter_user.getUsername());
-        
-        //db_query.getUser("dbuser");
-        db_query.getBabble(2);
-
 
         request.getRequestDispatcher("/profile_view.ftl").forward(request, response);
 

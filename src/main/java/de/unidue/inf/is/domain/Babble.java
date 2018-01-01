@@ -3,6 +3,7 @@ package de.unidue.inf.is.domain;
 import java.sql.Timestamp;
 
 public class Babble implements Comparable<Babble> {
+    private  Timestamp activityTimestamp;
     private String inhalt="";
     private String activity="";
     private Timestamp datum;
@@ -27,6 +28,29 @@ public class Babble implements Comparable<Babble> {
         this.shared=shared;
     }
 
+    public Babble(int id, String babble_content, Timestamp new_stamp, String author, int likes, int dislikes, int rebabbles, String activity, Timestamp activityTimestamp) {
+        this.id= id;
+        this.datum = new_stamp;
+        this.inhalt=babble_content;
+        this.author=author;
+        this.likes = likes;
+        this.dislikes = dislikes;
+        this.shared=rebabbles;
+        this.activity = activity;
+        this.activityTimestamp = activityTimestamp;
+    }
+
+    public Babble() {
+
+    }
+
+    public Timestamp getActivityTimestamp() {
+        return activityTimestamp;
+    }
+
+    public void setActivityTimestamp(Timestamp activityTimestamp) {
+        this.activityTimestamp = activityTimestamp;
+    }
 
     public String getActivity() {
         return activity;
@@ -90,11 +114,17 @@ public class Babble implements Comparable<Babble> {
     public String timestampasstring(){
         return datum.toString();
     }
-    
+
+
+    public int getId() {
+        return id;
+    }
+
     public int compareTo(Babble b){
-		return getDatum().compareTo(b.getDatum());
-		
+		return b.getDatum().compareTo(getDatum());
 	}
+
+
 
 }
 
