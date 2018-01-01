@@ -33,25 +33,29 @@ public final class Babble_Details extends HttpServlet {
 
         babble = db_query.getBabble(id);
         System.out.println(id);
-        request.setAttribute("author", babble.getAuthor());
-        request.setAttribute("id", babble.getId());
-        request.setAttribute("inhalt", babble.getInhalt());
-        request.setAttribute("shared", babble.getShared());
-        request.setAttribute("likes", babble.getLikes());
-        request.setAttribute("dislikes", babble.getDislikes());
-        request.setAttribute("datum", babble.getDatum());
-        System.out.println(String.valueOf(db_query.babbleActivity(sessionId, id, "liked")) + " " + String.valueOf(db_query.babbleActivity(sessionId, id, "disliked")) + " " + String.valueOf(db_query.babbleActivity(sessionId, id, "rebabbled")));
-        request.setAttribute("likeBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "liked")));
-        request.setAttribute("dislikeBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "disliked")));
-        request.setAttribute("rebabbleBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "rebabbled")));
+        if(babble != null) {
 
-        request.getRequestDispatcher("/babble_details.ftl").forward(request, response);
+            request.setAttribute("author", babble.getAuthor());
+            request.setAttribute("id", babble.getId());
+            request.setAttribute("inhalt", babble.getInhalt());
+            request.setAttribute("shared", babble.getShared());
+            request.setAttribute("likes", babble.getLikes());
+            request.setAttribute("dislikes", babble.getDislikes());
+            request.setAttribute("datum", babble.getDatum());
+            System.out.println(String.valueOf(db_query.babbleActivity(sessionId, id, "liked")) + " " + String.valueOf(db_query.babbleActivity(sessionId, id, "disliked")) + " " + String.valueOf(db_query.babbleActivity(sessionId, id, "rebabbled")));
+            request.setAttribute("likeBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "liked")));
+            request.setAttribute("dislikeBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "disliked")));
+            request.setAttribute("rebabbleBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "rebabbled")));
+
+            request.getRequestDispatcher("/babble_details.ftl").forward(request, response);
+        }else{
+            request.getRequestDispatcher("/bad_req.ftl").forward(request, response);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("act");
-        String state = req.getParameter("state");
 
         HttpSession session = req.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
@@ -61,21 +65,21 @@ public final class Babble_Details extends HttpServlet {
         System.out.println(id + "  " + sessionId);
         switch (action) {
             case "Like":
-                if (Boolean.parseBoolean(state)) {
+                if (db_query.babbleActivity(sessionId,id,"liked")) {
                     db_query.doAction(id, sessionId, "unlike");
                 } else {
                     db_query.doAction(id, sessionId, "like");
                 }
                 break;
             case "Dislike":
-                if (Boolean.parseBoolean(state)) {
+                if (db_query.babbleActivity(sessionId,id,"disliked")) {
                     db_query.doAction(id, sessionId, "undislike");
                 } else {
                     db_query.doAction(id, sessionId, "dislike");
                 }
                 break;
             case "Rebabble":
-                if (Boolean.parseBoolean(state)) {
+                if (db_query.babbleActivity(sessionId,id,"rebabbled")) {
                     db_query.doAction(id, sessionId, "unrebabble");
                 } else {
                     db_query.doAction(id, sessionId, "rebabble");
