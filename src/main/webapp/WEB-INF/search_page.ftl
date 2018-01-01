@@ -17,14 +17,60 @@
         <input id="btn" type="submit" value="Search">
     </form>
 </div>
-<div class="container-results">
+<div class="container-words">
     <#if  "${ss}" == "world">
     <form action="">
-        <p>resault for </p>
-        <p>${searchedfor}</p>
+        <p>result for </p>
+        <p><b>${searchedFor}</b></p>
     </form>
-</#if>
+    <#else>
+    <form action="">
+        <p>Keine Ergebnisse</p>
+    </form>
+    </#if>
 </div>
+
+<!-- get result babbles -->
+<div class="container-results" style="width: 100%;min-width: 200px;">
+	<#if "${ss}" == "world">
+    <ul style="list-style-type: none;">
+    <#list resultbabble as bab>
+        <li style="padding-right: 20%; padding-left: 20%; margin-bottom: 20px">
+            <fieldset style="background: #ececf2; border-color: #1f669c; border-radius: 20px">
+                <legend><a href="/profile_view/${bab.author}">${bab.author}</a></legend>
+                <a href="/babble_details/${bab.id}" style="text-decoration: none; color: inherit">
+                    <fieldset
+                            style="min-height: 50px; background: #c9d4fe; border-radius: 5px; margin-bottom: 7px; border-color: transparent">
+                        <div>
+
+                            ${bab.inhalt}
+
+                        </div>
+
+                    </fieldset>
+                </a>
+                <span style="font-size: 16">
+                    <i class="fa fa-thumbs-up" aria-hidden="true" style="color:#305a80; margin-left: 20px"></i>
+                    <label>${bab.likes}</label>
+                    <i class="fa fa-thumbs-down" aria-hidden="true" style="color:#8b0008;margin-left: 20px"></i>
+                    <label>${bab.dislikes}<label>
+                        <i class="fa fa-share" aria-hidden="true" style="color:#348037;margin-left: 20px"></i>
+                        <label>${bab.shared}</label>
+                </span>
+                <span style="font-size: 11px; float: right">
+                    ${bab.datum}
+                </span>
+            </fieldset>
+        </li>
+    </#list>
+    </ul>
+    </#if>
+</div>
+<!-- ..........................................-->
+
+
+
+
 </body>
 </html>
 

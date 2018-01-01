@@ -292,9 +292,9 @@ public final class DB_query implements Closeable {
             }
         }
 
-        public Block isBlocked (String blocker, String blockee){
+        public Block isBlocked(String blocker, String blockee){
             Block block = new Block();
-            String selectSQL = "SELECT reason FROM dbp66.Blocks WHERE Blocker = ? and Blockee=?";
+            String selectSQL = "SELECT reason FROM dbp66.Blocks WHERE Blocker=? and Blockee=? ";
             try (PreparedStatement ps = connection.prepareStatement(selectSQL)) {
                 ps.setString(1, blocker);
                 ps.setString(2, blockee);
@@ -434,11 +434,18 @@ public final class DB_query implements Closeable {
             return result;
         }
 
-        public ArrayList<Babble> getSearch (String searchTerm, String user){
+        public ArrayList<Babble> getSearch(String searchTerm, String user){
+
+			String searchT = searchTerm
+			.replace("!", "!!")
+			.replace("%", "!%")
+			.replace("_", "!_")
+			.replace("[", "![");
+
 
             ArrayList<Babble> result = new ArrayList<>();
-            try (PreparedStatement ps = connection.prepareStatement("SELECT id, text,created, creator from dbp66.babble where text like %?%")) {
-                ps.setString(1, searchTerm);
+            try (PreparedStatement ps = connection.prepareStatement("SELECT id, text,created, creator from dbp66.babble where text like ?")) {
+                ps.setString(1, "%" + searchT + "%");
 
                 try (ResultSet rs = ps.executeQuery()) {
 
