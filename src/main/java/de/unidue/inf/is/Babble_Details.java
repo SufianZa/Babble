@@ -34,6 +34,8 @@ public final class Babble_Details extends HttpServlet {
         babble = db_query.getBabble(id);
         System.out.println(id);
         if(babble != null) {
+            if(!db_query.isBlocked(babble.getAuthor(),sessionId).getBlockState()){
+
 
             request.setAttribute("author", babble.getAuthor());
             request.setAttribute("id", babble.getId());
@@ -48,8 +50,11 @@ public final class Babble_Details extends HttpServlet {
             request.setAttribute("rebabbleBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "rebabbled")));
 
             request.getRequestDispatcher("/babble_details.ftl").forward(request, response);
+            }else{
+                request.getRequestDispatcher("/bad_requests/acc_denied.ftl").forward(request, response);
+            }
         }else{
-            request.getRequestDispatcher("/bad_req.ftl").forward(request, response);
+            request.getRequestDispatcher("/bad_requests/bad_req.ftl").forward(request, response);
         }
     }
 
