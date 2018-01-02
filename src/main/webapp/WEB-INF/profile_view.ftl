@@ -91,8 +91,6 @@
             <#else>
             <span> ${profile} follows ${bab.author} and he wrote:</span>
             </#if>
-            
-            
         </div>
 
         <li style="padding-right: 20%; padding-left: 20%; margin-bottom: 20px">
@@ -170,46 +168,63 @@
 </#if>
 
 </body>
+
 </html>
 
-  <style>
-      .container-personal-info > div {
-          margin-top: 30px;
-      }
+<script>
 
-      .ul-head {
-          list-style-type: none;
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-          background-color: #1f669c;
-      }
+    $(".block_follow").on("click", function (e) {
+        var action = $(this).text();
+        var reason = "";
+        if (action === 'Block') {
+            reason = prompt("Reason :", "");
+        }
+        e.preventDefault(); // cancel the link itself
+        var data = {act: action, reason: reason};
+        $.post(this.href, data, function () {
+            $(".block_follow").html();
+        });
+        location.reload();
+    });
+</script>
+<style>
+    .container-personal-info > div {
+        margin-top: 30px;
+    }
 
-      .head {
-          float: left;
-      }
+    .ul-head {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #1f669c;
+    }
 
-      .head a {
-          display: block;
-          color: white;
-          text-align: center;
-          padding: 14px 16px;
-          text-decoration: none;
-      }
+    .head {
+        float: left;
+    }
 
-      .head a:hover {
-          background-color: #111;
-      }
+    .head a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
 
-      body {
-          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-          font-size: 18px;
-          font-style: normal;
-          font-variant: normal;
-          font-weight: 500;
-          line-height: 26.4px;
-      }
-  </style>
+    .head a:hover {
+        background-color: #111;
+    }
+
+    body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 18px;
+        font-style: normal;
+        font-variant: normal;
+        font-weight: 500;
+        line-height: 26.4px;
+    }
+</style>
 
 
 <style>
@@ -229,19 +244,4 @@
     }
 </style>
 
-<script>
 
-    $(".block_follow").on("click", function (e) {
-        var action = $(this).text();
-        var reason = "";
-        if (action === 'Block') {
-            reason = prompt("Reason :", "");
-        }
-        e.preventDefault(); // cancel the link itself
-        var data = {act: action, reason: reason};
-        $.post(this.href, data, function () {
-            $(".block_follow").html();
-        });
-        location.reload();
-    });
-</script>

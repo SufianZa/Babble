@@ -114,6 +114,10 @@
         if (x == "") {
             alert("a Babble can't be empty");
             return false;
+        }else if(x.length > 280){
+            alert('a Babble can\'t be longer than 280 letters');
+            return false;
         }
     }
+
 </script>

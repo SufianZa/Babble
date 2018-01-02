@@ -112,7 +112,6 @@
           color: white;
           padding: 14px 20px;
           margin-right: 10px;
-
           margin-top: 10px;
           border: none;
           border-radius: 4px;
@@ -168,7 +167,7 @@
         e.preventDefault(); // cancel the link itself
         var data = {act: action};
         $.post(this.href, data, function () {
-            $('form').html('<strong style="font-size: 30px"> <i class="fa fa-check" aria-hidden="true" style="color: #348037"></i> Babble has been deleted </strong>');
+            $('form').html('<div style="font-size: 30px; text-align: center"> <i class="fa fa-check-circle-o" aria-hidden="true" style="color: #348037; font-size: 90px;"></i> <br> <p>Babble has been deleted </p></div> ');
         });
 
     });
