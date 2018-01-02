@@ -454,13 +454,14 @@ public final class DB_query implements Closeable {
                             result.add(new Babble(rs.getInt(1), rs.getString(2), rs.getTimestamp(3), rs.getString(4), getNumber(rs.getInt(1),"likes"), getNumber(rs.getInt(1),"dislikes"), getNumber(rs.getInt(1),"rebabbles")));
                         }
                     }
+                    return result;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return result;
+            return null;
         }
 
 

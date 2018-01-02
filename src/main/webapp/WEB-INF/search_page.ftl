@@ -18,15 +18,12 @@
     </form>
 </div>
 <div class="container-words">
-    <#if  "${ss}" == "world">
-    <form action="">
-        <p>result for </p>
-        <p><b>${searchedFor}</b></p>
-    </form>
+    <#if  "${ss}" == "first">
+
+    <#elseif "${ss}" == "world" >
+        <span>result for <strong style="font-style: italic">  "${searchedFor}"</strong></span>
     <#else>
-    <form action="">
         <p>Keine Ergebnisse</p>
-    </form>
     </#if>
 </div>
 
@@ -39,14 +36,10 @@
             <fieldset style="background: #ececf2; border-color: #1f669c; border-radius: 20px">
                 <legend><a href="/profile_view/${bab.author}">${bab.author}</a></legend>
                 <a href="/babble_details/${bab.id}" style="text-decoration: none; color: inherit">
-                    <fieldset
-                            style="min-height: 50px; background: #c9d4fe; border-radius: 5px; margin-bottom: 7px; border-color: transparent">
-                        <div>
-
+                    <fieldset style="min-height: 50px; background: #c9d4fe; border-radius: 5px; margin-bottom: 7px; border-color: transparent">
+                        <p>
                             ${bab.inhalt}
-
-                        </div>
-
+                        </p>
                     </fieldset>
                 </a>
                 <span style="font-size: 16">
@@ -109,7 +102,7 @@
           background-color: #111;
       }
 
-      input[type=text] {
+      form > input[type=text] {
 
           padding: 12px 20px;
           width: 50%;
@@ -119,7 +112,7 @@
           box-sizing: border-box;
       }
 
-      input[type=submit] {
+      form > input[type=submit] {
           background-color: #4CAF50;
           color: white;
           padding: 14px 20px;
@@ -128,7 +121,7 @@
           cursor: pointer;
       }
 
-      input[type=submit]:hover {
+      form >  input[type=submit]:hover {
           background-color: #45a049;
       }
 
@@ -145,5 +138,19 @@
           font-variant: normal;
           font-weight: 500;
           line-height: 26.4px;
+      }
+       legend a:link, a:visited {
+           background-color: #1f669c;
+           color: white;
+           padding: 1px;
+           text-align: center;
+           font-size: 14px;
+           text-decoration: none;
+           display: inline-block;
+           border-radius: 4px;
+       }
+
+      legend a:hover, a:active {
+          background-color: #154165;
       }
   </style>

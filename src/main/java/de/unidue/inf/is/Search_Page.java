@@ -20,7 +20,7 @@ import java.util.List;
 
 
 public class Search_Page extends HttpServlet {
-    String searcbed;
+    String searched;
     
     ArrayList<Babble> result;
     
@@ -29,29 +29,26 @@ public class Search_Page extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
-        
-        request.setAttribute("searchedFor", "Warum?");
-        
-        searcbed = request.getParameter("searched");
+        searched = request.getParameter("searched");
         
                 
-        if(searcbed != null && !searcbed.equals("")){
-			result = db_query.getSearch(searcbed, sessionId);
-		} else {
-			result = new ArrayList<>();
-		}
+        if(searched != null && !searched.equals("")){
+			result = db_query.getSearch(searched, sessionId);
+            if(result == null || result.isEmpty()){
+                request.setAttribute("resultbabble", result);
+                request.setAttribute("ss", "nothing");
+                request.setAttribute("searchedFor", searched);
+            } else {
+                request.setAttribute("resultbabble", result);
+                request.setAttribute("ss", "world");
+                request.setAttribute("searchedFor", searched);
+            }
+		}else{
+            request.setAttribute("ss", "first");
+            request.setAttribute("resultbabble", result);
+        }
 		
-        if(result == null || result.isEmpty()){
-			request.setAttribute("ss"," y");
-			//searcbed ="";
-			request.setAttribute("resultbabble", null);
-			request.setAttribute("searchedFor", " ");
-		} else {
-			//System.err.println("ResultBabble: " + result.get(0).getInhalt());
-			request.setAttribute("resultbabble", result);
-			request.setAttribute("ss", "world");
-			request.setAttribute("searchedFor", searcbed);
-		}
+
 
         request.setAttribute("loggedUser",sessionId);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search_page.ftl");
