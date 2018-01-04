@@ -28,6 +28,7 @@ public final class Profile_View extends HttpServlet {
     private static List<Babble> babbles = new ArrayList<>();
     private String blockState = "Block";
     private String followState = "Follow";
+    private String sendMassage = "no";
     private String blockedContent = "default";
     
     DB_query db_query = new DB_query();
@@ -82,7 +83,6 @@ public final class Profile_View extends HttpServlet {
         request.setAttribute("interaction_babble", interaction_babble);
 
         request.setAttribute("blockContent",this.blockedContent);
-
         //check if logged in user is NOT visiting his own profile page
         if(!eingeloggter_user.getUsername().equals(besuchter_user.getUsername())){
             Block b_Blocks_a  = db_query.isBlocked(besuchter_user.getUsername(),eingeloggter_user.getUsername());
@@ -99,7 +99,11 @@ public final class Profile_View extends HttpServlet {
             request.setAttribute("blockState",  this.blockState);
             if(db_query.isFollowed(eingeloggter_user.getUsername(),besuchter_user.getUsername())){
                 this.followState = "Unfollow";
+                if(db_query.isFollowed(besuchter_user.getUsername(),eingeloggter_user.getUsername())){
+                    this.sendMassage = "send";
+                }
             }
+            request.setAttribute("sendMassage",  this.sendMassage);
             request.setAttribute("followState",  this.followState);
         }
 

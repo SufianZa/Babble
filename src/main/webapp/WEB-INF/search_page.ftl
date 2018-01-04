@@ -12,9 +12,9 @@
 
 
 <div class="container">
-    <form action="">
+    <form action="" style="margin-bottom: 0px;">
         <input id="search" type="text" name="searched">
-        <input id="btn" type="submit" value="Search">
+        <input id="btn" type="submit" value="Search" onClick="return empty()">
     </form>
 </div>
 <div class="container-words">
@@ -23,17 +23,17 @@
     <#elseif "${ss}" == "world" >
         <span>result for <strong style="font-style: italic">  "${searchedFor}"</strong></span>
     <#else>
-        <p>Keine Ergebnisse</p>
+        <span >no results were found for <strong style="font-style: italic">  "${searchedFor}"</strong></span>
     </#if>
 </div>
 
 <!-- get result babbles -->
 <div class="container-results" style="width: 100%;min-width: 200px;">
 	<#if "${ss}" == "world">
-    <ul style="list-style-type: none;">
+    <ul style="list-style-type: none; margin: 0">
     <#list resultbabble as bab>
-        <li style="padding-right: 20%; padding-left: 20%; margin-bottom: 20px">
-            <fieldset style="background: #ececf2; border-color: #1f669c; border-radius: 20px">
+        <li style="padding-right: 20%; padding-left: 20%;">
+            <fieldset style="background: #ececf2; border-color: #1f669c; border-radius: 20px; margin-top: 10px">
                 <legend><a href="/profile_view/${bab.author}">${bab.author}</a></legend>
                 <a href="/babble_details/${bab.id}" style="text-decoration: none; color: inherit">
                     <fieldset style="min-height: 50px; background: #c9d4fe; border-radius: 5px; margin-bottom: 7px; border-color: transparent">
@@ -126,9 +126,7 @@
       }
 
       div {
-          border-radius: 5px;
           background-color: #f2f2f2;
-          padding: 20px;
       }
 
       body {
@@ -154,3 +152,13 @@
           background-color: #154165;
       }
   </style>
+<script>
+   function empty() {
+       var x;
+       x = document.getElementById("search").value.trim();
+       if (x == "") {
+           return false;
+       }
+   }
+
+</script>

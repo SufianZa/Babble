@@ -111,7 +111,7 @@
     function empty() {
         var x;
         x = document.getElementById("babbleText").value;
-        if (x == "") {
+        if (x.trim() == "") {
             alert("a Babble can't be empty");
             return false;
         }else if(x.length > 280){

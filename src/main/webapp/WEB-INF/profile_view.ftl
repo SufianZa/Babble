@@ -11,6 +11,10 @@
 <#if "${loggedUser}"!="${profile}">
     <li class="head" style="float: right"><a class="block_follow" href="">${blockState}</a></form></li>
     <li class="head" style="float: right"><a class="block_follow" href="">${followState}</a></li>
+<#if "${sendMassage}"=="send">
+    <li class="head" style="float: right"><a class="sendMassage" href="../massage">Send a Massage</a></li>
+</#if>
+
 </#if>
     <li class="head" style="float: left"><a href="../search"> <i class="fa fa-search" aria-hidden="true"></i> Search
         Babble</a></li>
