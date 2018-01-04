@@ -12,7 +12,7 @@
     <li class="head" style="float: right"><a class="block_follow" href="">${blockState}</a></form></li>
     <li class="head" style="float: right"><a class="block_follow" href="">${followState}</a></li>
 <#if "${sendMassage}"=="send">
-    <li class="head" style="float: right"><a class="sendMassage" href="../massage">Send a Massage</a></li>
+    <li class="head" style="float: right"><a class="sendMassage" href="../message">Send a Message</a></li>
 </#if>
 
 </#if>
