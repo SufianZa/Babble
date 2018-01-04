@@ -18,7 +18,7 @@
     <div style="padding-right: 10%; padding-left: 10%; text-align: center; margin-top: 10%; margin-bottom: 5%; ">
         <i class="fa fa-times-circle" aria-hidden="true" style="font-size: 120px; color: #71726e"></i>
         <br><br>
-         <strong style="font-size: 30px;"> This Babble dose not exist anymore</strong>
+         <strong style="font-size: 30px;"> This Babble does not exist anymore</strong>
 
     </div>
 </div>
