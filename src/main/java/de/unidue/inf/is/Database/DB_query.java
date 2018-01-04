@@ -466,6 +466,19 @@ public final class DB_query implements Closeable {
 
 
         public void writeMessage (String writer, String receiver, String text){
+			
+			String sql = "insert into dbp66.Babblemessage (sender, recipient, text) values (?, ?, ?)";
+            
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, writer);
+                preparedStatement.setString(2, receiver);
+                preparedStatement.setString(3, text);
+                preparedStatement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            
 
         }
 
