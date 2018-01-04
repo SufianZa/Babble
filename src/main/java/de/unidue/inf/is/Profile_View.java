@@ -27,19 +27,12 @@ public final class Profile_View extends HttpServlet {
     private String sendMassage = "no";
     private String blockedContent = "default";
     
+    private String image_p;
+    
     DB_query db_query = new DB_query();
     User eingeloggter_user;
     User besuchter_user;
     
-
-    static {
-        babbles.add(new Babble(5,"Peace ♥ ",new Timestamp(System.currentTimeMillis()),"Sufian",0,58,20));
-        babbles.add(new Babble(2,"I hate u all",new Timestamp(System.currentTimeMillis()),"wisee",55,3,1));
-    }
-
-    
- 
-
 
 
     @Override
@@ -74,9 +67,17 @@ public final class Profile_View extends HttpServlet {
         ArrayList<Babble> friends_babble = db_query.getFriendsBabbles(besuchter_user.getUsername());
         ArrayList<Babble> interaction_babble = db_query.getInteraction(besuchter_user.getUsername());
 
+		if(besuchter_user.getImage_path() == null || besuchter_user.getImage_path().isEmpty() || besuchter_user.getImage_path().equals(" ")){
+			image_p = "http://www.qatarliving.com/sites/all/themes/qatarliving_v3/images/avatar.jpeg";
+		} else {
+			image_p = besuchter_user.getImage_path();
+		}
+
         request.setAttribute("own_babble", own_babble);
         request.setAttribute("friends_babble", friends_babble);
         request.setAttribute("interaction_babble", interaction_babble);
+        
+        request.setAttribute("Profile_Image_Path" , image_p);
 
         request.setAttribute("blockContent",this.blockedContent);
         //check if logged in user is NOT visiting his own profile page
