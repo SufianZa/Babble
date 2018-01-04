@@ -51,16 +51,6 @@
 
 
 	<servlet>
-		<servlet-name>babble_servlet</servlet-name>
-		<servlet-class>de.unidue.inf.is.BabbleServlet</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>babble_servlet</servlet-name>
-		<url-pattern>/babble</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<servlet-name>profile_view</servlet-name>
 		<servlet-class>de.unidue.inf.is.Profile_View</servlet-class>
 	</servlet>

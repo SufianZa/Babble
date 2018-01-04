@@ -14,10 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * Einfaches Beispiel, das die Verwendung des {@link UserStore}s zeigt.
- */
 public final class Login_Page extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

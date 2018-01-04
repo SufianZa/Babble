@@ -17,10 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Einfaches Beispiel, das die Verwendung des {@link UserStore}s zeigt.
- */
-
 
 public final class Profile_View extends HttpServlet {
 
@@ -119,6 +115,7 @@ public final class Profile_View extends HttpServlet {
         this.followState="Follow";
         this.blockState ="Block";
         this.blockedContent="default";
+        this.sendMassage = "no";
     }
 
     @Override

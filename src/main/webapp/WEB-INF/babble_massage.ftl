@@ -18,26 +18,23 @@
     <div class="container" style="width: 100%;min-width: 200px;">
         <ul style="list-style-type: none;">
             <#list massages as m>
-
                 <#if "${m.sender}" == "${loggedUser}">
-                    <li style="float: right;width: 50%;margin-right: 50%">
+                    <li style="float: right;width: 50%;padding-right: 50%">
 
                 <#else>
                     <li style="float: left;width: 50%;margin-left: 50%">
                 </#if>
-                        <fieldset style="background: #c9d4fe; border-radius: 5px">
-                            ${m.text}
+                        <fieldset style="background: #cecdca; border-radius: 5px;"  >
+                            <span style="word-break: break-all;">${m.text}</span>
                         </fieldset>
+                <p style="font-size: 12px">${m.created}</p>
                     </li>
-                 <div style="border-radius: 10px;background: #eeeeee;text-align: center; font-size: 12; color: #909090">
-                <p>${m.created}</p>
-            </div>
             </#list>
         </ul>
-        <hr>
-        <div style="padding-left: 40%;">
+
+            <div >
         <fieldset style="background: #c9d4fe; border-radius: 5px; border-color: transparent;">
-            <textarea id="massageWrite" name="massage" cols="40" rows="5"></textarea>
+            <textarea id="massageWrite" name="massage" cols="40" rows="5" ></textarea>
             <input type="submit"></input>
         </fieldset>
         </div>

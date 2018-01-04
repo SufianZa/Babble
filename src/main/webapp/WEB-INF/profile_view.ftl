@@ -186,9 +186,8 @@
         e.preventDefault(); // cancel the link itself
         var data = {act: action, reason: reason};
         $.post(this.href, data, function () {
-            $(".block_follow").html();
+            location.reload();
         });
-        location.reload();
     });
 </script>
 <style>
