@@ -25,11 +25,11 @@ public final class Babble_Message extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         ArrayList<Message> list = new ArrayList<>();
-        Massage m = new Message(1,"hi dbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUser","dbuser","student_1",new Timestamp(System.currentTimeMillis()));
-        Massage m2 = new Message(2,"sub","student_1","dbuser",new Timestamp(System.currentTimeMillis()));
-        Massage m3 = new Message(3,"hi hoooh","student_1","dbuser",new Timestamp(System.currentTimeMillis()));
-        Massage m4 = new Message(4,"hi sdfsadfasdfasdfasdfasdf","student_1","dbuser",new Timestamp(System.currentTimeMillis()));
-        Massage m5 = new Message(6,"hallo","dbuser","student_1",new Timestamp(System.currentTimeMillis()));
+        Message m = new Message(1,"hi dbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUser","dbuser","student_1",new Timestamp(System.currentTimeMillis()));
+        Message m2 = new Message(2,"sub","student_1","dbuser",new Timestamp(System.currentTimeMillis()));
+        Message m3 = new Message(3,"hi hoooh","student_1","dbuser",new Timestamp(System.currentTimeMillis()));
+        Message m4 = new Message(4,"hi sdfsadfasdfasdfasdfasdf","student_1","dbuser",new Timestamp(System.currentTimeMillis()));
+        Message m5 = new Message(6,"hallo","dbuser","student_1",new Timestamp(System.currentTimeMillis()));
             list.add(m);
             list.add(m2);
             list.add(m3);

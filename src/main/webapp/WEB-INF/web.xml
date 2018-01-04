@@ -110,13 +110,13 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>babble_massage</servlet-name>
-		<servlet-class>de.unidue.inf.is.Babble_Massage</servlet-class>
+		<servlet-name>babble_message</servlet-name>
+		<servlet-class>de.unidue.inf.is.Babble_Message</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>babble_massage</servlet-name>
-		<url-pattern>/massage</url-pattern>
+		<servlet-name>babble_message</servlet-name>
+		<url-pattern>/message</url-pattern>
 	</servlet-mapping>
 
 	<!-- Prevent the visiting of MVC Views from outside the servlet container.
