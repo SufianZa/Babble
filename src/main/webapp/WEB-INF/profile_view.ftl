@@ -22,22 +22,36 @@
 </ul>
 
 <!--Personal Information-->
+<hr>
+<div style="background: #399c53; color: white; text-align: center">Personal Information</div>
+<hr>
 <div class="container-personal-info" style="overflow:auto; background-color:#e8efff;">
     <img src="${Profile_Image_Path}" width="120" height="110"
          style="float: right; margin: 2%">
-    <div>Benutzername : <span style="text-align: center">${username} </span></div>
-    <div>Name : ${name} </div>
-    <div>Status : ${status} </div>
+    <table>
+        <tr>
+            <th>Username</th>
+            <td>${username}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>${name}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>${status}</td>
+        </tr>
+    </table>
 </div>
 
 <!--new Babble-->
+
+<!-- check if Blocked -->
+<#if "${blockContent}" == "blocked">
 <ul class="ul-head">
     <li class="head" style="float: right"><a href="../create">New Babble</a></li>
 </ul>
 
-
-<!-- check if Blocked -->
-<#if "${blockContent}" == "blocked">
     <div class="container" style="width: 100%;min-width: 200px;">
         <ul style="list-style-type: none;">
             <li style="padding-right: 20%; padding-left: 20%;">
@@ -52,7 +66,14 @@
         </ul>
     </div>
 <#else>
+<hr>
+<div style="background: #ff5a42; color: white; text-align: center">Timeline</div>
+<hr>
+<ul class="ul-head">
+    <li class="head" style="float: right"><a href="../create">New Babble</a></li>
+</ul>
 <!-- get own babbles -->
+<diV class="sign"><a>babbles</a></diV>
 <div class="container" style="width: 100%;min-width: 200px;">
     <ul style="list-style-type: none;">
     <#list own_babble as bab>
@@ -87,7 +108,8 @@
     </ul>
 <!-- ..........................................-->
 <hr>
-<ul style="list-style-type: none;">
+    <diV class="sign"><a>Friends babbles</a></diV>
+    <ul style="list-style-type: none;">
     <#list friends_babble as bab>
 		<div style="border-radius: 10px;background: #eeeeee;padding-left: 10px;padding-right: 10px;margin-bottom: 10px ;margin-left: 15%;margin-right: 60%; font-size: 14; color: #909090">
 			<#if "${profile}" == "${loggedUser}">
@@ -128,7 +150,8 @@
 </ul>
 <hr>
 <!-- ..........................................-->
-<ul style="list-style-type: none;">
+    <diV class="sign"><a>Activities</a></diV>
+    <ul style="list-style-type: none;">
     <#list interaction_babble as bab>
        <div style="border-radius: 10px;background: #eeeeee;padding-left: 10px;padding-right: 10px;margin-bottom: 10px ;margin-left: 15%;margin-right: 60%; font-size: 14; color: #909090">
 
@@ -191,6 +214,20 @@
     });
 </script>
 <style>
+    .sign{
+        padding-top: 20px;
+        position: relative;
+    }
+    .sign a{
+        padding: 10px;
+        margin: 5px ;
+        background: #1f669c;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px
+    }
+    hr{
+        margin: 2;
+    }
     .container-personal-info > div {
         margin-top: 30px;
     }
@@ -227,6 +264,23 @@
         font-weight: 500;
         line-height: 26.4px;
     }
+    table {
+        width: 80%;
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+    }
+
+     th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 18px;
+    }
+    td {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding:15px;
+    }
+
 </style>
 
 
