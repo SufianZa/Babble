@@ -36,8 +36,11 @@ public final class Babble_Message extends HttpServlet {
             list.add(m4);
             list.add(m5);
         String sessionId = (String) session.getAttribute("sessionID");
+        String profile = (String) session.getAttribute("profile");
+
         request.setAttribute("loggedUser", sessionId);
-        request.setAttribute("massages", list);
+        request.setAttribute("profile", profile);
+        request.setAttribute("messages", list);
 
         request.getRequestDispatcher("/babble_message.ftl").forward(request, response);
     }

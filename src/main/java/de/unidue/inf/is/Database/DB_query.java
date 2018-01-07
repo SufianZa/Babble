@@ -478,7 +478,6 @@ public final class DB_query implements Closeable {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            
 
         }
 

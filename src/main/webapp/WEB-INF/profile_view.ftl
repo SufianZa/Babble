@@ -11,8 +11,8 @@
 <#if "${loggedUser}"!="${profile}">
     <li class="head" style="float: right"><a class="block_follow" href="">${blockState}</a></form></li>
     <li class="head" style="float: right"><a class="block_follow" href="">${followState}</a></li>
-<#if "${sendMassage}"=="send">
-    <li class="head" style="float: right"><a class="sendMassage" href="../message">Send a Message</a></li>
+<#if "${sendMessage}"=="send">
+    <li class="head" style="float: right; "><a class="sendMessage" href="../message">Send a Message </a> <span style="background: #ababad; border-radius: 20px; margin: 0px ;font-size: 12px;line-height: normal; padding-right: 4px; padding-left: 4px ;float: right; position: absolute; right: 5cm; top: 45px">*num*</span></li>
 </#if>
 
 </#if>
@@ -25,7 +25,7 @@
 <div class="container-personal-info" style="overflow:auto; background-color:#e8efff;">
     <img src="${Profile_Image_Path}" width="120" height="110"
          style="float: right; margin: 2%">
-    <div>Benutzername : ${username} </div>
+    <div>Benutzername : <span style="text-align: center">${username} </span></div>
     <div>Name : ${name} </div>
     <div>Status : ${status} </div>
 </div>

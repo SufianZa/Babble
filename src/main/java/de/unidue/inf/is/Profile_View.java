@@ -24,7 +24,7 @@ public final class Profile_View extends HttpServlet {
     private static List<Babble> babbles = new ArrayList<>();
     private String blockState = "Block";
     private String followState = "Follow";
-    private String sendMassage = "no";
+    private String sendMessage = "no";
     private String blockedContent = "default";
     
     private String image_p;
@@ -44,18 +44,12 @@ public final class Profile_View extends HttpServlet {
         session.setAttribute("sessionID",sessionID);
         request.setAttribute("loggedUser",sessionID);
 
-
-
-		//Im Moment gibt eingeloggter_user.getUsername() noch null zurück..
-		//getInteraction funktioniert jetzt.
-
-
-		
 		
 		//get the profile page after clicking a name
         StringBuffer url = request.getRequestURL();
         String profile = url.substring(url.lastIndexOf("/")+1);
         request.setAttribute("profile",profile);
+        session.setAttribute("profile",profile);
 
 
         //create logged in user and user of the visited profile page
@@ -97,10 +91,10 @@ public final class Profile_View extends HttpServlet {
             if(db_query.isFollowed(eingeloggter_user.getUsername(),besuchter_user.getUsername())){
                 this.followState = "Unfollow";
                 if(db_query.isFollowed(besuchter_user.getUsername(),eingeloggter_user.getUsername())){
-                    this.sendMassage = "send";
+                    this.sendMessage = "send";
                 }
             }
-            request.setAttribute("sendMassage",  this.sendMassage);
+            request.setAttribute("sendMessage",  this.sendMessage);
             request.setAttribute("followState",  this.followState);
         }
 
@@ -116,7 +110,7 @@ public final class Profile_View extends HttpServlet {
         this.followState="Follow";
         this.blockState ="Block";
         this.blockedContent="default";
-        this.sendMassage = "no";
+        this.sendMessage = "no";
     }
 
     @Override

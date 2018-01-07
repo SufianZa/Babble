@@ -2,44 +2,50 @@
 <head>
     <link href="http://designers.hubspot.com/hs-fs/hub/327485/file-2054199286-css/font-awesome.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <title>Massage</title>
+    <title>message</title>
 </head>
 <!-- Header Tools-->
 <body>
 <ul class="ul-head">
     <li class="head" style="float: left"><a href="../search"> <i class="fa fa-search" aria-hidden="true"></i> Search
         Babble</a></li>
-    <li class="head"><a href="${loggedUser}"><i class="fa fa-home" aria-hidden="true"></i> ${loggedUser}</a></li>
+    <li class="head"><a href="profile_view/${loggedUser}"><i class="fa fa-home" aria-hidden="true"></i> ${loggedUser}
+    </a></li>
 </ul>
 
 
 <!-- check if Blocked -->
 
-    <div class="container" style="width: 100%;min-width: 200px;">
-        <ul style="list-style-type: none;">
-            <#list massages as m>
-                <#if "${m.sender}" == "${loggedUser}">
-                    <li style="float: right;width: 50%;padding-right: 50%">
-
+<div class="container" style="width: 100%;min-width: 200px;">
+    <ul style="list-style-type: none;">
+            <#list messages as m>
+                <#if "${m.sender}" != "${loggedUser}">
+                <li class="head" style="float: right;width: 50%;padding-right: 50%">
+                  <a href="/profile_view/${m.sender}"
+                     style="float: left;font-size: 12px; position: relative; top: -10px;  padding: 3px; border-radius: 5px; background: #010101;"> ${m.sender}</a>
                 <#else>
-                    <li style="float: left;width: 50%;margin-left: 50%">
+
+                <li class="head" style="float: left;width: 50%;padding-left: 50%">
+
                 </#if>
-                        <fieldset style="background: #cecdca; border-radius: 5px;"  >
-                            <span style="word-break: break-all;">${m.text}</span>
-                        </fieldset>
+
+                <fieldset style="background: #cecdca; border-radius: 5px;">
+                    <span style="word-break: break-all;">${m.text}</span>
+                </fieldset>
                 <p style="font-size: 12px">${m.created}</p>
-                    </li>
+            </li>
             </#list>
-        </ul>
+        <div>
+            <fieldset style="background: #c9d4fe; border-radius: 5px; border-color: transparent;padding: 5">
+                <textarea id="messageWrite" name="message" cols="5" rows="3" style="width: 85%; font-size: 18px"></textarea>
+                <input type="submit" value="send">
+            </fieldset>
 
-            <div >
-        <fieldset style="background: #c9d4fe; border-radius: 5px; border-color: transparent;">
-            <textarea id="massageWrite" name="massage" cols="40" rows="5" ></textarea>
-            <input type="submit"></input>
-        </fieldset>
+
         </div>
-    </div>
+    </ul>
 
+</div>
 
 
 </body>
@@ -54,6 +60,7 @@
         border: 0 none;
         width: 100%;
     }
+
     .container-personal-info > div {
         margin-top: 30px;
     }
@@ -90,15 +97,16 @@
         font-weight: 500;
         line-height: 26.4px;
     }
+
     input[type=submit] {
         float: right;
         background-color: #1f669c;
         color: white;
         padding: 14px 20px;
-        margin: 8px 0;
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        height: 70px
     }
 
     input[type=submit]:hover {
