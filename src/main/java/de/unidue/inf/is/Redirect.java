@@ -17,21 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public final class Redirect extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    DB_query db_query = new DB_query();
+    User eingeloggter_user;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        session.setAttribute("sessionID",request.getParameter("sessionID"));
-        String sessionID = (String) session.getAttribute("sessionID");
-        System.out.println("logged in as "+ sessionID);
+        String fieldText = request.getParameter("sessionID");
+        eingeloggter_user = db_query.getUser(fieldText);
+        if (eingeloggter_user == null) {
+            request.setAttribute("user","wrong");
+            request.getRequestDispatcher("/home_login.ftl").forward(request,response);
+        } else {
+            HttpSession session = request.getSession();
+            session.setAttribute("sessionID", fieldText);
+            String sessionID = (String) session.getAttribute("sessionID");
+            System.out.println("logged in as " + sessionID);
 
-        request.setAttribute("userProfile", sessionID);
-        request.getRequestDispatcher("/redirect.ftl").forward(request, response);
 
+            request.setAttribute("userProfile", sessionID);
+            request.getRequestDispatcher("/redirect.ftl").forward(request, response);
+        }
     }
 }
 

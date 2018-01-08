@@ -73,9 +73,10 @@
     <li class="head" style="float: right"><a href="../create">New Babble</a></li>
 </ul>
 <!-- get own babbles -->
-<diV class="sign"><a>babbles</a></diV>
+
 <div class="container" style="width: 100%;min-width: 200px;">
-    <ul style="list-style-type: none;">
+   <button>babbles</button>
+    <ul id="#own" style="list-style-type: none;">
     <#list own_babble as bab>
         <li style="padding-right: 20%; padding-left: 20%; margin-bottom: 20px">
             <fieldset style="background: #ececf2; border-color: #1f669c; border-radius: 20px">
@@ -108,8 +109,8 @@
     </ul>
 <!-- ..........................................-->
 <hr>
-    <diV class="sign"><a>Friends babbles</a></diV>
-    <ul style="list-style-type: none;">
+    <button>Friends babbles</button>
+    <ul id="#Friends" style="list-style-type: none;">
     <#list friends_babble as bab>
 		<div style="border-radius: 10px;background: #eeeeee;padding-left: 10px;padding-right: 10px;margin-bottom: 10px ;margin-left: 15%;margin-right: 60%; font-size: 14; color: #909090">
 			<#if "${profile}" == "${loggedUser}">
@@ -150,8 +151,8 @@
 </ul>
 <hr>
 <!-- ..........................................-->
-    <diV class="sign"><a>Activities</a></diV>
-    <ul style="list-style-type: none;">
+    <button>Activities</button>
+    <ul id="#Activities" style="list-style-type: none;">
     <#list interaction_babble as bab>
        <div style="border-radius: 10px;background: #eeeeee;padding-left: 10px;padding-right: 10px;margin-bottom: 10px ;margin-left: 15%;margin-right: 60%; font-size: 14; color: #909090">
 
@@ -212,18 +213,22 @@
             location.reload();
         });
     });
+    $('button').on("click", function (e) {
+        if($(this).next().is(":visible")){
+            $(this).next().slideUp();
+        }else{
+            $(this).next().slideDown();
+        }
+    })
 </script>
 <style>
-    .sign{
-        padding-top: 20px;
-        position: relative;
-    }
-    .sign a{
+    button {
         padding: 10px;
         margin: 5px ;
         background: #1f669c;
         border-top-right-radius: 20px;
-        border-bottom-left-radius: 20px
+        border-bottom-left-radius: 20px;
+        color: white;
     }
     hr{
         margin: 2;
@@ -266,7 +271,6 @@
     }
     table {
         width: 80%;
-        font-family: arial, sans-serif;
         border-collapse: collapse;
     }
 

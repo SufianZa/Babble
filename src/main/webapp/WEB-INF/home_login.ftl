@@ -60,7 +60,11 @@
         margin: 8px 0;
         width: 30%;
         display: inline-block;
+        <#if "${user}"=="wrong">
+             border: 1px solid #cc1917;
+        <#else>
         border: 1px solid #ccc;
+        </#if>
         border-radius: 4px;
         box-sizing: border-box;
     }

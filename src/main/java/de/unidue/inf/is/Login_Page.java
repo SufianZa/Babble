@@ -21,6 +21,7 @@ public final class Login_Page extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("user","right");
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/home_login.ftl");
         requestDispatcher.forward(request,response);
     }

@@ -49,6 +49,7 @@ public final class DB_query implements Closeable {
                     searchFor.setName(rs.getString(2));
                     searchFor.setStatus(rs.getString(3));
                     searchFor.setImage_path(rs.getString(4));
+                    return searchFor;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -56,7 +57,7 @@ public final class DB_query implements Closeable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return searchFor;
+        return null;
     }
 
     public void addUser(User userToAdd) {
