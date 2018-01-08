@@ -214,10 +214,15 @@
         });
     });
     $('button').on("click", function (e) {
+        if($(this).next().has('li').length){
         if($(this).next().is(":visible")){
             $(this).next().slideUp();
         }else{
             $(this).next().slideDown();
+            $('html, body').animate({
+                scrollTop: $(this).offset().top
+            }, 500);
+        }
         }
     })
 </script>
