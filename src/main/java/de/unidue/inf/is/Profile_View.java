@@ -25,7 +25,7 @@ public final class Profile_View extends HttpServlet {
 
     private String image_p;
 
-    DB_query db_query = new DB_query();
+    DB_query db_query;
     User eingeloggter_user;
     User besuchter_user;
 
@@ -33,6 +33,9 @@ public final class Profile_View extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+
+        db_query = new DB_query();
+    	
         //default values
         String blockState = "Block";
         String followState = "Follow";
@@ -63,8 +66,8 @@ public final class Profile_View extends HttpServlet {
 
             //get all activities
             ArrayList<Babble> own_babble = db_query.getOwnBabble(besuchter_user.getUsername());
-            ArrayList<Babble> friends_babble = db_query.getFriendsBabbles(besuchter_user.getUsername());
-            ArrayList<Babble> interaction_babble = db_query.getInteraction(besuchter_user.getUsername());
+            ArrayList<Babble> friends_babble = db_query.getFriendsBabbles(besuchter_user.getUsername(), eingeloggter_user.getUsername());
+            ArrayList<Babble> interaction_babble = db_query.getInteraction(besuchter_user.getUsername(), eingeloggter_user.getUsername());
 
             if (besuchter_user.getImage_path() == null) {
                 image_p = "http://www.qatarliving.com/sites/all/themes/qatarliving_v3/images/avatar.jpeg";
@@ -122,6 +125,9 @@ public final class Profile_View extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("act");
         String reason = req.getParameter("reason");
+        
+
+        db_query = new DB_query();
 
         switch (action) {
             case "Follow":
@@ -138,6 +144,8 @@ public final class Profile_View extends HttpServlet {
                 break;
             default:
         }
+        db_query.complete();
+        db_query.close();
     }
 
 }

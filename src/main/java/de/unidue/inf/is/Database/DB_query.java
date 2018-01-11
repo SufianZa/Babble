@@ -67,7 +67,6 @@ public final class DB_query implements Closeable {
             preparedStatement.setString(2, userToAdd.getName());
             preparedStatement.setString(3, userToAdd.getStatus());
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
             //throw new DBTransException(e);
             System.err.println("SQLState: " + e.getSQLState());
@@ -101,16 +100,19 @@ public final class DB_query implements Closeable {
     }
 
 
-        public ArrayList<Babble> getFriendsBabbles (String username){
+        public ArrayList<Babble> getFriendsBabbles (String username, String eingeloggter_user){
             ArrayList<Babble> result = new ArrayList<>();
 
-            try (PreparedStatement ps = connection.prepareStatement("select b.id from dbp66.Babble b,(select followee from dbp66.Follows f where follower = ?) friends where b.creator = friends.followee")) {
+            try (PreparedStatement ps = connection.prepareStatement("select b.id, b.creator from dbp66.Babble b,(select followee from dbp66.Follows f where follower = ?) friends where b.creator = friends.followee")) {
                 ps.setString(1, username);
 
                 try (ResultSet rs = ps.executeQuery()) {
 
                     while (rs.next()) {
-                        result.add(this.getBabble(rs.getInt(1)));
+                    	if(!isBlocked(rs.getString(2),eingeloggter_user).getBlockState()) {
+                            result.add(this.getBabble(rs.getInt(1)));
+                    		
+                    	}
                     }
 
                 } catch (SQLException e) {
@@ -153,7 +155,6 @@ public final class DB_query implements Closeable {
                 preparedStatement.setString(1, babble.getAuthor());
                 preparedStatement.setString(2, babble.getInhalt());
                 preparedStatement.executeUpdate();
-                connection.commit();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -230,7 +231,6 @@ public final class DB_query implements Closeable {
             preparedStatement.setString(1, username);
             preparedStatement.setInt(2, babbleid);
             preparedStatement.executeUpdate();
-            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -240,13 +240,13 @@ public final class DB_query implements Closeable {
 
         public void follow (String follower, String followee){
             String sql = "insert into dbp66.Follows (follower, followee) values (?, ?)";
-            Block block = isBlocked(follower, followee);
-            if (!block.getBlockState()) {
+            Block block1 = isBlocked(follower, followee);
+            Block block2 = isBlocked(followee, follower);
+            if (!block1.getBlockState() && !block2.getBlockState()) {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                     preparedStatement.setString(1, follower);
                     preparedStatement.setString(2, followee);
                     preparedStatement.executeUpdate();
-                    connection.commit();
                     System.err.println(follower + " has followed " + followee);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -259,7 +259,6 @@ public final class DB_query implements Closeable {
                 preparedStatement.setString(1, follower);
                 preparedStatement.setString(2, followee);
                 preparedStatement.executeUpdate();
-                connection.commit();
                 System.err.println(follower + " has unfollowed " + followee);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -273,7 +272,6 @@ public final class DB_query implements Closeable {
                 preparedStatement.setString(2, blockee);
                 preparedStatement.setString(3, reason);
                 preparedStatement.executeUpdate();
-                connection.commit();
                 System.err.println(blocker + " has blocked " + blockee + " reason " + reason);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -285,13 +283,17 @@ public final class DB_query implements Closeable {
                 preparedStatement.setString(1, blocker);
                 preparedStatement.setString(2, blockee);
                 preparedStatement.executeUpdate();
-                connection.commit();
+      
                 System.err.println(blocker + " has unblocked " + blockee);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
+        
+        	public void complete() {
+        		this.complete =true;
+        	}
+        	
         public Block isBlocked(String blocker, String blockee){
             Block block = new Block();
             String selectSQL = "SELECT reason FROM dbp66.Blocks WHERE Blocker=? and Blockee=? ";
@@ -365,16 +367,18 @@ public final class DB_query implements Closeable {
         return false;
     }
 
-        public ArrayList<Babble> getInteraction (String username){
+        public ArrayList<Babble> getInteraction (String username, String eingeloggter_user){
 
             ArrayList<Babble> result = new ArrayList<>();
-            try (PreparedStatement ps = connection.prepareStatement("select b.id, lb.created from dbp66.babble b, dbp66.likesbabble lb where lb.user = ? and lb.babble = b.id and lb.type = 'like'")) {
+            try (PreparedStatement ps = connection.prepareStatement("select b.id, lb.created, b.creator from dbp66.babble b, dbp66.likesbabble lb where lb.user = ? and lb.babble = b.id and lb.type = 'like'")) {
                 ps.setString(1, username);
 
                 try (ResultSet rs = ps.executeQuery()) {
 
                     while (rs.next()) {
+                    	if(!isBlocked(rs.getString(3),eingeloggter_user).getBlockState()) {
                         result.add(this.getBabble(rs.getInt(1), "liked", rs.getTimestamp(2)));
+                    	}
                     }
 
                 } catch (SQLException e) {
@@ -385,13 +389,15 @@ public final class DB_query implements Closeable {
                 e.printStackTrace();
             }
 
-            try (PreparedStatement ps = connection.prepareStatement("select b.id, rb.created from dbp66.babble b, dbp66.rebabble rb where rb.user = ? and rb.babble = b.id")) {
+            try (PreparedStatement ps = connection.prepareStatement("select b.id, rb.created, b.creator from dbp66.babble b, dbp66.rebabble rb where rb.user = ? and rb.babble = b.id")) {
                 ps.setString(1, username);
 
                 try (ResultSet rs = ps.executeQuery()) {
 
                     while (rs.next()) {
+                    	if(!isBlocked(rs.getString(3), eingeloggter_user).getBlockState()) {
                         result.add(this.getBabble(rs.getInt(1), "rebabbled", rs.getTimestamp(2)));
+                    	}
                     }
 
                 } catch (SQLException e) {
@@ -475,7 +481,7 @@ public final class DB_query implements Closeable {
                 preparedStatement.setString(2, receiver);
                 preparedStatement.setString(3, text);
                 preparedStatement.executeUpdate();
-                connection.commit();
+         
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -489,19 +495,27 @@ public final class DB_query implements Closeable {
 
         @Override
         public void close () throws IOException {
-            if (connection != null) {
-                try {
-                    connection.commit();
-                } catch (SQLException e) {
-                    throw new DBTransException(e);
-                } finally {
-                    try {
-                        connection.close();
-                    } catch (SQLException e) {
-                        throw new DBTransException(e);
-                    }
-                }
-            }
+        	 if (connection != null) {
+                 try {
+                     if (complete) {
+                         connection.commit();
+                     }
+                     else {
+                         connection.rollback();
+                     }
+                 }
+                 catch (SQLException e) {
+                     throw new DBTransException(e);
+                 }
+                 finally {
+                     try {
+                         connection.close();
+                     }
+                     catch (SQLException e) {
+                         e.printStackTrace();
+                     }
+                 }
+             }
         }
 
 

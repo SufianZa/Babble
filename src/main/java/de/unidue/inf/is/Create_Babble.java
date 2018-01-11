@@ -18,7 +18,7 @@ public final class Create_Babble extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    DB_query db_query = new DB_query();
+    DB_query db_query;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -31,6 +31,8 @@ public final class Create_Babble extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	
+    	db_query = new DB_query();
 
         HttpSession session = req.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
@@ -39,6 +41,8 @@ public final class Create_Babble extends HttpServlet {
         String inhalt = req.getParameter("babble");
         Babble babble = new Babble(author, inhalt);
         db_query.makeBabble(babble);
+        db_query.complete();
+        db_query.close();
         resp.sendRedirect("profile_view/" + sessionId);
     }
 }

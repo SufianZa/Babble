@@ -15,7 +15,7 @@ public final class Babble_Details extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    DB_query db_query = new DB_query();
+    DB_query db_query;
     Babble babble;
 
     @Override
@@ -24,6 +24,7 @@ public final class Babble_Details extends HttpServlet {
         HttpSession session = request.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
 
+        db_query = new DB_query();
 
         StringBuffer url = request.getRequestURL();
         int id = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1));
@@ -64,6 +65,7 @@ public final class Babble_Details extends HttpServlet {
 
         HttpSession session = req.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
+        db_query = new DB_query();
 
         StringBuffer url = req.getRequestURL();
         int id = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1));
@@ -94,5 +96,8 @@ public final class Babble_Details extends HttpServlet {
                     db_query.doAction(id, sessionId, "delete");
                 break;
         }
+        
+        db_query.complete();
+        db_query.close();
     }
 }
