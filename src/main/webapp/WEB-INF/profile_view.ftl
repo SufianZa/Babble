@@ -6,6 +6,7 @@
 </head>
 <!-- Header Tools-->
 <body>
+<#include "top_five.ftl" />
 <ul class="ul-head">
 
 <#if "${loggedUser}"!="${profile}">
@@ -14,7 +15,6 @@
 <#if "${sendMessage}"=="send">
     <li class="head" style="float: right; "><a class="sendMessage" href="../message">Send a Message </a> <span style="background: #ababad; border-radius: 20px; margin: 0px ;font-size: 12px;line-height: normal; padding-right: 4px; padding-left: 4px ;float: right; position: absolute; right: 5cm; top: 45px">*num*</span></li>
 </#if>
-
 </#if>
     <li class="head" style="float: left"><a href="../search"> <i class="fa fa-search" aria-hidden="true"></i> Search
         Babble</a></li>
