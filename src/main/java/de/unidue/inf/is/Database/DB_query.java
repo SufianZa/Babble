@@ -24,15 +24,10 @@ public final class DB_query implements Closeable {
     private Connection connection;
     private boolean complete;
 
-    public DB_query() throws DBTransException {
+    public DB_query() throws DBTransException, SQLException {
 
-        try {
             connection = DBUtil.getExternalConnection("MYBABBLE");
             connection.setAutoCommit(false);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -61,18 +56,15 @@ public final class DB_query implements Closeable {
     }
 
     public void addUser(User userToAdd) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into dbp66.BabbleUser (username, name, status) values (?, ?, ?)");
+
+            try(PreparedStatement preparedStatement = connection.prepareStatement("insert into dbp66.BabbleUser (username, name, status, foto) values (?, ?, ?, ?)")){
             preparedStatement.setString(1, userToAdd.getUsername());
             preparedStatement.setString(2, userToAdd.getName());
             preparedStatement.setString(3, userToAdd.getStatus());
+            preparedStatement.setString(4, userToAdd.getImage_path());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            //throw new DBTransException(e);
-            System.err.println("SQLState: " + e.getSQLState());
-            System.err.println("Error Code: " + e.getErrorCode());
-            System.err.println("Message: " + e.getMessage());
-
+           e.printStackTrace();
         }
     }
 

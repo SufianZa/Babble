@@ -1,6 +1,7 @@
 <html>
 <head>
     <link href="http://designers.hubspot.com/hs-fs/hub/327485/file-2054199286-css/font-awesome.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>search</title>
 </head>
 
@@ -30,7 +31,7 @@
 <!-- get result babbles -->
 <div class="container-results" style="width: 100%;min-width: 200px;">
 	<#if "${ss}" == "world">
-    <ul style="list-style-type: none; margin: 0">
+    <ul id="res" style="list-style-type: none; margin: 0; display: none">
     <#list resultbabble as bab>
         <li style="padding-right: 20%; padding-left: 20%;">
             <fieldset style="background: #ececf2; border-color: #1f669c; border-radius: 20px; margin-top: 10px">
@@ -66,7 +67,9 @@
 
 </body>
 </html>
-
+<script>
+    $("#res").slideDown('fast');
+</script>
   <style>
       .container {
           width: 100%;
@@ -75,7 +78,7 @@
 
       }
       .container-results {
-          height: 100%;
+          overflow: auto;
           margin-top: 5px;
 
       }

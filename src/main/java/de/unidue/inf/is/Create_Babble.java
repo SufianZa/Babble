@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 
@@ -31,8 +32,10 @@ public final class Create_Babble extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	
-    	db_query = new DB_query();
+
+        try {
+            db_query = new DB_query();
+
 
         HttpSession session = req.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
@@ -44,5 +47,9 @@ public final class Create_Babble extends HttpServlet {
         db_query.complete();
         db_query.close();
         resp.sendRedirect("profile_view/" + sessionId);
+        } catch (SQLException e) {
+            req.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(req,resp);
+            e.printStackTrace();
+        }
     }
 }
