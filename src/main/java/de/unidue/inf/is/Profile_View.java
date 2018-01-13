@@ -121,7 +121,7 @@ public final class Profile_View extends HttpServlet {
                 request.getRequestDispatcher("/profile_view.ftl").forward(request, response);
             }
         } catch (SQLException e) {
-            request.getRequestDispatcher("/bad_requests/bad_req.ftl").forward(request, response);
+            request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
         }
     }
