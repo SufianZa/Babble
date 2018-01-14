@@ -16,6 +16,7 @@ import de.unidue.inf.is.domain.Block;
 import de.unidue.inf.is.domain.User;
 import de.unidue.inf.is.utils.DBUtil;
 import de.unidue.inf.is.domain.Babble;
+import de.unidue.inf.is.domain.Message;
 
 
 public final class DB_query implements Closeable {
@@ -480,9 +481,51 @@ public final class DB_query implements Closeable {
 
         }
 
-        //public ArrayList<Messages> getMessages(String writer, String receiver){
+        public ArrayList<Message> getMessages(String writer, String receiver){
+			
+			String sql = "select m.text, m.created, m.id from DBP66.Babblemessage m where m.sender = ? and m.recipient = ?";
+			
+			ArrayList<Message> result = new ArrayList<>();
+			
+			try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				preparedStatement.setString(1, writer);
+				preparedStatement.setString(2, receiver);
+				
+				try(ResultSet rs = preparedStatement.executeQuery()){
+					while(rs.next()){
+						result.add(new Message(rs.getInt(3), rs.getString(1), writer , receiver, rs.getTimestamp(2)));
+					}
+					
+				} catch(SQLException e){
+					e.printStackTrace();
+				}
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
+			
+			
+			String sql2 = "select m.text, m.created, m.id from DBP66.Babblemessage m where m.sender = ? and m.recipient = ?";
+			
+			try(PreparedStatement preparedStatement2 = connection.prepareStatement(sql2)) {
+				preparedStatement2.setString(1, receiver);
+				preparedStatement2.setString(2, writer);
+				
+				try(ResultSet rs = preparedStatement2.executeQuery()){
+					while(rs.next()){
+						result.add(new Message(rs.getInt(3), rs.getString(1), receiver, writer , rs.getTimestamp(2)));
+					}
+					
+				} catch(SQLException e){
+					e.printStackTrace();
+				}
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
+			
+			Collections.sort(result);
+			return result;
 
-        //	}
+        }
 
 
         @Override
