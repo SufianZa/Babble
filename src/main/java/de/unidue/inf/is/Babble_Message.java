@@ -38,10 +38,10 @@ public final class Babble_Message extends HttpServlet {
             list.add(m3);
             list.add(m4);
             list.add(m5);
-            
+
             String sessionId = (String) session.getAttribute("sessionID");
             String profile = (String) session.getAttribute("profile");
-            
+
             //System.err.println("Session und Profil: " + sessionId + " " + profile);
             ArrayList<Message> mlist = db_query.getMessages(sessionId, profile);
 
@@ -51,13 +51,18 @@ public final class Babble_Message extends HttpServlet {
 
             request.getRequestDispatcher("/babble_message.ftl").forward(request, response);
         } catch (SQLException e) {
-            request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request,response);
+            request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String m = req.getParameter("message");
+        String r = req.getRequestURI();
+        System.out.println(m);
+        System.out.println(r);
 
+        doGet(req, resp);
     }
 }

@@ -2,7 +2,7 @@ package de.unidue.inf.is.domain;
 
 import java.sql.Timestamp;
 
-public class Message {
+public class Message implements Comparable<Message>{
     private int id;
     private String text;
     private String sender;
@@ -56,4 +56,9 @@ public class Message {
     public void setText(String text) {
         this.text = text;
     }
+
+    public int compareTo(Message m) {
+        return m.getCreated().compareTo(this.created);
+    }
+
 }

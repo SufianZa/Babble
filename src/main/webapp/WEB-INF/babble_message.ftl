@@ -37,8 +37,10 @@
             </#list>
         <div>
             <fieldset style="background: #c9d4fe; border-radius: 5px; border-color: transparent;padding: 5">
-                <textarea id="messageWrite" name="message" cols="5" rows="3" style="width: 85%; font-size: 18px"></textarea>
-                <input type="submit" value="send">
+                <form action="/message" method="post" id="textArea">
+                    <textarea id="messageWrite" name="message" form="textArea" cols="5" rows="3" style="width: 85%; font-size: 18px"></textarea>
+                    <input type="submit" value="send">
+                </form>
             </fieldset>
 
 
@@ -112,10 +114,7 @@
     input[type=submit]:hover {
         background-color: #298ad2;
     }
-</style>
 
-
-<style>
     legend a:link, a:visited {
         background-color: #1f669c;
         color: white;

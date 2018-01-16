@@ -29,7 +29,7 @@
 </div>
 
 <!-- get result babbles -->
-<div class="container-results" style="width: 100%;min-width: 200px;">
+<div class="container-results" style="width: 100%;min-width: 200px; height: 100%">
 	<#if "${ss}" == "world">
     <ul id="res" style="list-style-type: none; margin: 0; display: none">
     <#list resultbabble as bab>
@@ -62,13 +62,10 @@
 </div>
 <!-- ..........................................-->
 
-
-
-
 </body>
 </html>
 <script>
-    $("#res").slideDown('fast');
+    $("#res").slideDown();
 </script>
   <style>
       .container {

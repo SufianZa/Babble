@@ -10,7 +10,7 @@
 <ul class="ul-head">
 
 <#if "${loggedUser}"!="${profile}">
-    <li class="head" style="float: right"><a class="block_follow" href="">${blockState}</a></form></li>
+    <li class="head" style="float: right"><a class="block_follow" href="">${blockState}</a></li>
     <li class="head" style="float: right"><a class="block_follow" href="">${followState}</a></li>
 <#if "${sendMessage}"=="send">
     <li class="head" style="float: right; "><a class="sendMessage" href="../message">Send a Message </a> <span style="background: #ababad; border-radius: 20px; margin: 0px ;font-size: 12px;line-height: normal; padding-right: 4px; padding-left: 4px ;float: right; position: absolute; right: 5cm; top: 45px">*num*</span></li>
@@ -44,7 +44,7 @@
     </table>
 </div>
 
-<!--new Babble-->
+
 
 <!-- check if Blocked -->
 <#if "${blockContent}" == "blocked">
@@ -69,12 +69,13 @@
 <hr>
 <div style="background: #ff5a42; color: white; text-align: center">Timeline</div>
 <hr>
+<!--new Babble-->
 <ul class="ul-head">
     <li class="head" style="float: right"><a href="../create">New Babble</a></li>
 </ul>
 <!-- get own babbles -->
 
-<div class="container" style="width: 100%;min-width: 200px;">
+<div class="container" style="width: 100%;min-width: 200px; word-wrap: break-word;">
    <button>babbles</button>
     <ul id="#own" style="list-style-type: none;">
     <#list own_babble as bab>
@@ -217,6 +218,9 @@
         if($(this).next().has('li').length){
         if($(this).next().is(":visible")){
             $(this).next().slideUp();
+            $('html, body').animate({
+                scrollTop: $('head').offset().top
+            }, 500);
         }else{
             $(this).next().slideDown();
             $('html, body').animate({
