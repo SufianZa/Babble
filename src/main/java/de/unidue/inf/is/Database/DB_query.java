@@ -463,6 +463,30 @@ public final class DB_query implements Closeable {
             }
             return null;
         }
+        
+        public ArrayList<Babble> getTop5 (){
+			
+			String sqltop = "select count(l.user) as num, b.id from dbp66.babble b, dbp66.likesbabble l where b.id = l.babble group by b.id order by num desc fetch first 5 rows only";
+
+            ArrayList<Babble> result = new ArrayList<>();
+            try (PreparedStatement ps = connection.prepareStatement(sqltop)) {
+                
+                try (ResultSet rs = ps.executeQuery()) {
+
+                    while (rs.next()) {
+                        result.add(this.getBabble(rs.getInt(2)));
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
 
 
         public void writeMessage (String writer, String receiver, String text){
