@@ -52,6 +52,7 @@ public final class Profile_View extends HttpServlet {
             //reset the token
             session.setAttribute("sessionID",sessionID);
 
+            session.removeAttribute("profile");
             //get the profile page after clicking a name
             StringBuffer url = request.getRequestURL();
             String profile = url.substring(url.lastIndexOf("/") + 1);

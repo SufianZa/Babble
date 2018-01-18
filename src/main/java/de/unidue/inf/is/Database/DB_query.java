@@ -240,8 +240,7 @@ public final class DB_query implements Closeable {
                     preparedStatement.setString(1, follower);
                     preparedStatement.setString(2, followee);
                     preparedStatement.executeUpdate();
-                    System.err.println(follower + " has followed " + followee);
-                } catch (SQLException e) {
+                    } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
@@ -252,7 +251,6 @@ public final class DB_query implements Closeable {
                 preparedStatement.setString(1, follower);
                 preparedStatement.setString(2, followee);
                 preparedStatement.executeUpdate();
-                System.err.println(follower + " has unfollowed " + followee);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -265,7 +263,6 @@ public final class DB_query implements Closeable {
                 preparedStatement.setString(2, blockee);
                 preparedStatement.setString(3, reason);
                 preparedStatement.executeUpdate();
-                System.err.println(blocker + " has blocked " + blockee + " reason " + reason);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -276,9 +273,7 @@ public final class DB_query implements Closeable {
                 preparedStatement.setString(1, blocker);
                 preparedStatement.setString(2, blockee);
                 preparedStatement.executeUpdate();
-      
-                System.err.println(blocker + " has unblocked " + blockee);
-            } catch (SQLException e) {
+                } catch (SQLException e) {
                 e.printStackTrace();
             }
         }

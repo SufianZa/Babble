@@ -13,7 +13,7 @@
     <li class="head" style="float: right"><a class="block_follow" href="">${blockState}</a></li>
     <li class="head" style="float: right"><a class="block_follow" href="">${followState}</a></li>
 <#if "${sendMessage}"=="send">
-    <li class="head" style="float: right; "><a class="sendMessage" href="../message">Send a Message </a> <span style="background: #ababad; border-radius: 20px; margin: 0px ;font-size: 12px;line-height: normal; padding-right: 4px; padding-left: 4px ;float: right; position: absolute; right: 5cm; top: 45px">*num*</span></li>
+    <li class="head" style="float: right; "><a class="sendMessage" href="../message">Send a Message </a> <span style="color: white;font-size: 12px;line-height: normal ;float: right; position: absolute; right: 5cm; top: 45px"><i class="fa fa-envelope-o" aria-hidden="true"></i></span></li>
 </#if>
 </#if>
     <li class="head" style="float: left"><a href="../search"> <i class="fa fa-search" aria-hidden="true"></i> Search

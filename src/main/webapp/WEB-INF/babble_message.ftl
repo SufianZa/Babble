@@ -136,7 +136,7 @@
 
 <script>
 
-
+window.location.href ="#last"
     $('.message').click(function () {
         if (!$(this).next().is(":visible")) {
             $('.message').next().slideUp();

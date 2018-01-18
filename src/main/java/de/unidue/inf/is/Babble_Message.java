@@ -37,7 +37,8 @@ public final class Babble_Message extends HttpServlet {
             session.setAttribute("profile",profile);
 
             user = db_query.getUser(sessionId);
-            if (user != null) {
+            User user2 = db_query.getUser(profile);
+            if (user != null &&  user2 != null ) {
                 //System.err.println("Session und Profil: " + sessionId + " " + profile);
                 ArrayList<Message> mlist = db_query.getMessages(sessionId, profile);
 
@@ -62,24 +63,22 @@ public final class Babble_Message extends HttpServlet {
 		HttpSession session = request.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
         String profile = (String) session.getAttribute("profile");
-        session.setAttribute("sessionID",sessionId);
-        session.setAttribute("profile",profile);
-		
-        String m = request.getParameter("message");
-        String r = request.getRequestURI();
-        //System.out.println(m);
-        //System.out.println(r);
-        try{
-		    db_query = new DB_query();
-		} catch(SQLException e){
-			e.printStackTrace();
-		}
-        
-        db_query.writeMessage(sessionId, profile, m);
-        
-        db_query.complete();
-        db_query.close();
 
+        try{
+            db_query = new DB_query();
+            User user = db_query.getUser(sessionId);
+            if(user != null) {
+                String message = request.getParameter("message");
+                db_query.writeMessage(sessionId, profile, message);
+                db_query.complete();
+                db_query.close();
+            }else{
+                response.sendRedirect("/");
+            }
+        } catch(SQLException e){
+
+            e.printStackTrace();
+        }
         doGet(request, response);
     }
 }
