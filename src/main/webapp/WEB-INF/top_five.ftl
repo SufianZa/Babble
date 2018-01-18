@@ -3,7 +3,7 @@
 <div id="topList" style="z-index: 2;border-radius: 20px; right:1px ;position: fixed; border:8px solid gold;; display: none; max-width: 450; width: 500; min-height: 70%; max-height: 70%;overflow: auto; word-wrap: break-word; background: gold">
     <ul style=" list-style-type: none; margin: 0; padding: 0">
         <li style="text-align: center;" > <strong style="margin-bottom: 5px; font-size: 18px; white-space: nowrap;">Top 5 Babbles</strong></li>
-    <#list friends_babble as bab>
+    <#list top_bab as bab>
 
         <li style="margin-bottom: 5px; font-size: 12px;">
             <fieldset style="min-width: 300px;background: #ececf2; border-color: #1f669c; border-radius: 20px">

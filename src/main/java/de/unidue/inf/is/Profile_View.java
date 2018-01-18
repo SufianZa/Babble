@@ -82,6 +82,7 @@ public final class Profile_View extends HttpServlet {
                 request.setAttribute("own_babble", own_babble);
                 request.setAttribute("friends_babble", friends_babble);
                 request.setAttribute("interaction_babble", interaction_babble);
+                request.setAttribute("top_bab", db_query.getTop5());
 
 
                 request.setAttribute("blockContent", blockedContent);
