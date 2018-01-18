@@ -2,6 +2,7 @@ package de.unidue.inf.is;
 
 import de.unidue.inf.is.Database.DB_query;
 import de.unidue.inf.is.domain.Babble;
+import de.unidue.inf.is.domain.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,37 +28,38 @@ public final class Babble_Details extends HttpServlet {
 
         try {
             db_query = new DB_query();
+            User user = db_query.getUser(sessionId);
+            if(user != null) {
+                //reset token
+                session.setAttribute("sessionID",sessionId);
 
-            StringBuffer url = request.getRequestURL();
-            int id = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1));
+                StringBuffer url = request.getRequestURL();
+                int id = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1));
+                request.setAttribute("loggedUser", sessionId);
+                babble = db_query.getBabble(id);
+                System.out.println(id);
+                if (babble != null) {
+                    if (!db_query.isBlocked(babble.getAuthor(), sessionId).getBlockState()) {
+                        request.setAttribute("author", babble.getAuthor());
+                        request.setAttribute("id", babble.getId());
+                        request.setAttribute("inhalt", babble.getInhalt());
+                        request.setAttribute("shared", babble.getShared());
+                        request.setAttribute("likes", babble.getLikes());
+                        request.setAttribute("dislikes", babble.getDislikes());
+                        request.setAttribute("datum", babble.getDatum());
+                        request.setAttribute("likeBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "liked")));
+                        request.setAttribute("dislikeBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "disliked")));
+                        request.setAttribute("rebabbleBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "rebabbled")));
 
-
-            request.setAttribute("loggedUser", sessionId);
-
-            babble = db_query.getBabble(id);
-            System.out.println(id);
-            if (babble != null) {
-                if (!db_query.isBlocked(babble.getAuthor(), sessionId).getBlockState()) {
-
-
-                    request.setAttribute("author", babble.getAuthor());
-                    request.setAttribute("id", babble.getId());
-                    request.setAttribute("inhalt", babble.getInhalt());
-                    request.setAttribute("shared", babble.getShared());
-                    request.setAttribute("likes", babble.getLikes());
-                    request.setAttribute("dislikes", babble.getDislikes());
-                    request.setAttribute("datum", babble.getDatum());
-                    System.out.println(String.valueOf(db_query.babbleActivity(sessionId, id, "liked")) + " " + String.valueOf(db_query.babbleActivity(sessionId, id, "disliked")) + " " + String.valueOf(db_query.babbleActivity(sessionId, id, "rebabbled")));
-                    request.setAttribute("likeBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "liked")));
-                    request.setAttribute("dislikeBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "disliked")));
-                    request.setAttribute("rebabbleBtn", String.valueOf(db_query.babbleActivity(sessionId, id, "rebabbled")));
-
-                    request.getRequestDispatcher("/babble_details.ftl").forward(request, response);
+                        request.getRequestDispatcher("/babble_details.ftl").forward(request, response);
+                    } else {
+                        request.getRequestDispatcher("/bad_requests/acc_denied.ftl").forward(request, response);
+                    }
                 } else {
-                    request.getRequestDispatcher("/bad_requests/acc_denied.ftl").forward(request, response);
+                    request.getRequestDispatcher("/bad_requests/bad_req.ftl").forward(request, response);
                 }
-            } else {
-                request.getRequestDispatcher("/bad_requests/bad_req.ftl").forward(request, response);
+            }else{
+            response.sendRedirect("/");
             }
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
@@ -73,43 +75,45 @@ public final class Babble_Details extends HttpServlet {
         String sessionId = (String) session.getAttribute("sessionID");
         try {
             db_query = new DB_query();
-
-
-            StringBuffer url = req.getRequestURL();
-            int id = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1));
-            System.out.println(id + "  " + sessionId);
-            switch (action) {
-                case "Like":
-                    if (db_query.babbleActivity(sessionId, id, "liked")) {
-                        db_query.doAction(id, sessionId, "unlike");
-                    } else {
-                        db_query.doAction(id, sessionId, "like");
-                    }
-                    break;
-                case "Dislike":
-                    if (db_query.babbleActivity(sessionId, id, "disliked")) {
-                        db_query.doAction(id, sessionId, "undislike");
-                    } else {
-                        db_query.doAction(id, sessionId, "dislike");
-                    }
-                    break;
-                case "Rebabble":
-                    if (db_query.babbleActivity(sessionId, id, "rebabbled")) {
-                        db_query.doAction(id, sessionId, "unrebabble");
-                    } else {
-                        db_query.doAction(id, sessionId, "rebabble");
-                    }
-                    break;
-                case "Delete":
-                    db_query.doAction(id, sessionId, "delete");
-                    break;
+            User user = db_query.getUser(sessionId);
+            if(user != null) {
+                StringBuffer url = req.getRequestURL();
+                int id = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1));
+                switch (action) {
+                    case "Like":
+                        if (db_query.babbleActivity(sessionId, id, "liked")) {
+                            db_query.doAction(id, sessionId, "unlike");
+                        } else {
+                            db_query.doAction(id, sessionId, "like");
+                        }
+                        break;
+                    case "Dislike":
+                        if (db_query.babbleActivity(sessionId, id, "disliked")) {
+                            db_query.doAction(id, sessionId, "undislike");
+                        } else {
+                            db_query.doAction(id, sessionId, "dislike");
+                        }
+                        break;
+                    case "Rebabble":
+                        if (db_query.babbleActivity(sessionId, id, "rebabbled")) {
+                            db_query.doAction(id, sessionId, "unrebabble");
+                        } else {
+                            db_query.doAction(id, sessionId, "rebabble");
+                        }
+                        break;
+                    case "Delete":
+                        db_query.doAction(id, sessionId, "delete");
+                        break;
+                }
+                db_query.complete();
+                db_query.close();
+            }else {
+                resp.sendRedirect("/");
             }
-
-            db_query.complete();
-            db_query.close();
         } catch (SQLException e) {
             req.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(req,resp);
             e.printStackTrace();
+            db_query.close();
         }
     }
 }

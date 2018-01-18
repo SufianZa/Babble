@@ -26,17 +26,17 @@ public final class Redirect extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String fieldText = request.getParameter("sessionID");
+        String sessionId = request.getParameter("sessionID");
         DB_query db_query = null;
         try {
             db_query = new DB_query();
-            eingeloggter_user = db_query.getUser(fieldText);
+            eingeloggter_user = db_query.getUser(sessionId);
             if (eingeloggter_user == null) {
                 request.setAttribute("user", "wrong");
                 request.getRequestDispatcher("/home_login.ftl").forward(request, response);
             } else {
                 HttpSession session = request.getSession();
-                session.setAttribute("sessionID", fieldText);
+                session.setAttribute("sessionID", sessionId);
                 String sessionID = (String) session.getAttribute("sessionID");
                 System.out.println("logged in as " + sessionID);
 
@@ -47,6 +47,7 @@ public final class Redirect extends HttpServlet {
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request,response);
             e.printStackTrace();
+            db_query.close();
         }
     }
 }

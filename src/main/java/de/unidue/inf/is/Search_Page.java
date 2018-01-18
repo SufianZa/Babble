@@ -20,41 +20,47 @@ import java.util.List;
 
 
 public class Search_Page extends HttpServlet {
-    String searched;
+
 
     ArrayList<Babble> result;
-
     DB_query db_query;
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
-        searched = request.getParameter("searched");
+        session.setAttribute("sessionID", sessionId);
+
+        String searched = request.getParameter("searched");
 
         try {
             db_query = new DB_query();
-            if (searched != null && !searched.equals("")) {
-                result = db_query.getSearch(searched, sessionId);
-                if (result == null || result.isEmpty()) {
-                    request.setAttribute("resultbabble", result);
-                    request.setAttribute("ss", "nothing");
-                    request.setAttribute("searchedFor", searched);
+            User user = db_query.getUser(sessionId);
+            if(user != null) {
+                if (searched != null && !searched.equals("")) {
+                    result = db_query.getSearch(searched, sessionId);
+                    if (result == null || result.isEmpty()) {
+                        request.setAttribute("resultbabble", result);
+                        request.setAttribute("ss", "nothing");
+                        request.setAttribute("searchedFor", searched);
+                    } else {
+                        request.setAttribute("resultbabble", result);
+                        request.setAttribute("ss", "world");
+                        request.setAttribute("searchedFor", searched);
+                    }
                 } else {
+                    request.setAttribute("ss", "first");
                     request.setAttribute("resultbabble", result);
-                    request.setAttribute("ss", "world");
-                    request.setAttribute("searchedFor", searched);
                 }
-            } else {
-                request.setAttribute("ss", "first");
-                request.setAttribute("resultbabble", result);
+                request.setAttribute("loggedUser", sessionId);
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search_page.ftl");
+                requestDispatcher.forward(request, response);
+            }else{
+                response.sendRedirect("/");
             }
-
-
-            request.setAttribute("loggedUser", sessionId);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search_page.ftl");
-            requestDispatcher.forward(request, response);
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request,response);
             e.printStackTrace();
+            db_query.close();
         }
     }
 }

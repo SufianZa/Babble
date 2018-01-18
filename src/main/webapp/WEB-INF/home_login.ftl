@@ -1,6 +1,7 @@
 <html>
 <head>
     <link href="http://designers.hubspot.com/hs-fs/hub/327485/file-2054199286-css/font-awesome.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>Login</title>
 </head>
 <!-- Header Welcome-->

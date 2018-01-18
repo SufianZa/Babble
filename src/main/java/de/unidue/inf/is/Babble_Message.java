@@ -3,6 +3,7 @@ package de.unidue.inf.is;
 import de.unidue.inf.is.Database.DB_query;
 import de.unidue.inf.is.domain.Babble;
 import de.unidue.inf.is.domain.Message;
+import de.unidue.inf.is.domain.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +21,7 @@ public final class Babble_Message extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     DB_query db_query;
+    User user;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -27,32 +29,30 @@ public final class Babble_Message extends HttpServlet {
         try {
             db_query = new DB_query();
             HttpSession session = request.getSession();
-            ArrayList<Message> list = new ArrayList<>();
-            Message m = new Message(1, "hi dbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUserdbUser", "dbuser", "student_1", new Timestamp(System.currentTimeMillis()));
-            Message m2 = new Message(2, "sub", "student_1", "dbuser", new Timestamp(System.currentTimeMillis()));
-            Message m3 = new Message(3, "hi hoooh", "student_1", "dbuser", new Timestamp(System.currentTimeMillis()));
-            Message m4 = new Message(4, "hi sdfsadfasdfasdfasdfasdf", "student_1", "dbuser", new Timestamp(System.currentTimeMillis()));
-            Message m5 = new Message(6, "hallo", "dbuser", "student_1", new Timestamp(System.currentTimeMillis()));
-            list.add(m);
-            list.add(m2);
-            list.add(m3);
-            list.add(m4);
-            list.add(m5);
-
             String sessionId = (String) session.getAttribute("sessionID");
             String profile = (String) session.getAttribute("profile");
 
-            //System.err.println("Session und Profil: " + sessionId + " " + profile);
-            ArrayList<Message> mlist = db_query.getMessages(sessionId, profile);
+            //reset the token
+            session.setAttribute("sessionID",sessionId);
+            session.setAttribute("profile",profile);
 
-            request.setAttribute("loggedUser", sessionId);
-            request.setAttribute("profile", profile);
-            request.setAttribute("messages", mlist);
+            user = db_query.getUser(sessionId);
+            if (user != null) {
+                //System.err.println("Session und Profil: " + sessionId + " " + profile);
+                ArrayList<Message> mlist = db_query.getMessages(sessionId, profile);
 
-            request.getRequestDispatcher("/babble_message.ftl").forward(request, response);
+                request.setAttribute("loggedUser", sessionId);
+                request.setAttribute("profile", profile);
+                request.setAttribute("messages", mlist);
+
+                request.getRequestDispatcher("/babble_message.ftl").forward(request, response);
+            } else {
+                response.sendRedirect("/");
+            }
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+            db_query.close();
         }
     }
 

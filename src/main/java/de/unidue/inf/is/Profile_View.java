@@ -48,9 +48,9 @@ public final class Profile_View extends HttpServlet {
             //get logged in person
             HttpSession session = request.getSession();
             String sessionID = (String) session.getAttribute("sessionID");
-            session.setAttribute("sessionID", sessionID);
-            request.setAttribute("loggedUser", sessionID);
 
+            //reset the token
+            session.setAttribute("sessionID",sessionID);
 
             //get the profile page after clicking a name
             StringBuffer url = request.getRequestURL();
@@ -58,14 +58,16 @@ public final class Profile_View extends HttpServlet {
 
 
             //create logged in user and user of the visited profile page
-
             eingeloggter_user = db_query.getUser(sessionID);
             besuchter_user = db_query.getUser(profile);
-            if (besuchter_user == null) {
+
+            request.setAttribute("loggedUser", sessionID);
+            if (eingeloggter_user == null) {
+                response.sendRedirect("/");
+            } else if (besuchter_user == null) {
                 request.getRequestDispatcher("/bad_requests/acc_denied_profile.ftl").forward(request, response);
             } else {
                 request.setAttribute("profile", profile);
-
                 //get all activities
                 ArrayList<Babble> own_babble = db_query.getOwnBabble(besuchter_user.getUsername());
                 ArrayList<Babble> friends_babble = db_query.getFriendsBabbles(besuchter_user.getUsername(), eingeloggter_user.getUsername());
@@ -123,6 +125,7 @@ public final class Profile_View extends HttpServlet {
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+            db_query.close();
         }
     }
 
@@ -155,6 +158,7 @@ public final class Profile_View extends HttpServlet {
         } catch (SQLException e) {
             req.getRequestDispatcher("/bad_requests/db_fail_connect.ftl");
             e.printStackTrace();
+            db_query.close();
         }
     }
 

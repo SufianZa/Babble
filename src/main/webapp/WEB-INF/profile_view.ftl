@@ -5,7 +5,7 @@
     <title>Profile</title>
 </head>
 <!-- Header Tools-->
-<body>
+<body style="display: none">
 <#include "top_five.ftl" />
 <ul class="ul-head">
 
@@ -197,9 +197,10 @@
 </#if>
 
 </body>
-
 </html>
-
+<script>
+    $('body').fadeIn();
+</script>
 <script>
 
     $(".block_follow").on("click", function (e) {
@@ -313,5 +314,4 @@
         background-color: #154165;
     }
 </style>
-
 
