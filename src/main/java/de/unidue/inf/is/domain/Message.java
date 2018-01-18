@@ -58,7 +58,7 @@ public class Message implements Comparable<Message>{
     }
 
     public int compareTo(Message m) {
-        return m.getCreated().compareTo(this.created);
+        return created.compareTo(m.getCreated());
     }
 
 }

@@ -57,12 +57,29 @@ public final class Babble_Message extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String m = req.getParameter("message");
-        String r = req.getRequestURI();
-        System.out.println(m);
-        System.out.println(r);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		HttpSession session = request.getSession();
+        String sessionId = (String) session.getAttribute("sessionID");
+        String profile = (String) session.getAttribute("profile");
+        session.setAttribute("sessionID",sessionId);
+        session.setAttribute("profile",profile);
+		
+        String m = request.getParameter("message");
+        String r = request.getRequestURI();
+        //System.out.println(m);
+        //System.out.println(r);
+        try{
+		    db_query = new DB_query();
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+        
+        db_query.writeMessage(sessionId, profile, m);
+        
+        db_query.complete();
+        db_query.close();
 
-        doGet(req, resp);
+        doGet(request, response);
     }
 }
