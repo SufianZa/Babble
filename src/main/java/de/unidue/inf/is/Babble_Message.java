@@ -33,12 +33,12 @@ public final class Babble_Message extends HttpServlet {
             String profile = (String) session.getAttribute("profile");
 
             //reset the token
-            session.setAttribute("sessionID",sessionId);
-            session.setAttribute("profile",profile);
+            session.setAttribute("sessionID", sessionId);
+            session.setAttribute("profile", profile);
 
             user = db_query.getUser(sessionId);
             User user2 = db_query.getUser(profile);
-            if (user != null &&  user2 != null ) {
+            if (user != null && user2 != null) {
                 //System.err.println("Session und Profil: " + sessionId + " " + profile);
                 ArrayList<Message> mlist = db_query.getMessages(sessionId, profile);
 
@@ -59,26 +59,28 @@ public final class Babble_Message extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		HttpSession session = request.getSession();
+
+        HttpSession session = request.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
         String profile = (String) session.getAttribute("profile");
+        String url =  request.getRequestURI();
 
-        try{
+        try {
             db_query = new DB_query();
             User user = db_query.getUser(sessionId);
-            if(user != null) {
+            if (user != null) {
                 String message = request.getParameter("message");
                 db_query.writeMessage(sessionId, profile, message);
                 db_query.complete();
                 db_query.close();
-            }else{
+                response.sendRedirect(url);
+            } else {
                 response.sendRedirect("/");
             }
-        } catch(SQLException e){
-
+        } catch (SQLException e) {
+            request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+            db_query.close();
         }
-        doGet(request, response);
     }
 }

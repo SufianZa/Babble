@@ -64,6 +64,7 @@ public final class Babble_Details extends HttpServlet {
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+            db_query.close();
         }
     }
 

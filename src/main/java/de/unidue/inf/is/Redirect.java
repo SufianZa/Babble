@@ -23,11 +23,11 @@ public final class Redirect extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     User eingeloggter_user;
-
+    DB_query db_query;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String sessionId = request.getParameter("sessionID");
-        DB_query db_query = null;
+
         try {
             db_query = new DB_query();
             eingeloggter_user = db_query.getUser(sessionId);
