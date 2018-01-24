@@ -57,13 +57,12 @@ public final class DB_query implements Closeable {
     public ArrayList<Babble> getFriendsBabbles(String username, String eingeloggter_user) {
         ArrayList<Babble> result = new ArrayList<>();
 
-        try (PreparedStatement ps = connection.prepareStatement("select b.id, b.text,b.created, b.creator from dbp66.Babble b,(select followee from dbp66.Follows f where follower = ?) friends where b.creator = friends.followee")) {
+        try (PreparedStatement ps = connection.prepareStatement("select b.id, b.text,b.created, b.creator from dbp66.Babble b,(select followee from dbp66.Follows f where follower = ?) friends where b.creator = friends.followee and not EXISTS (select * from dbp66.blocks bl WHERE bl.blocker=b.creator and bl.blockee=?)")) {
             ps.setString(1, username);
+            ps.setString(2, eingeloggter_user);
 
             try (ResultSet rs = ps.executeQuery()) {
-
                 while (rs.next()) {
-                    if (!isBlocked(rs.getString(4), eingeloggter_user).getBlockState()) {
                         int id = rs.getInt(1);
                         result.add(new Babble(id,
                                 rs.getString(2),
@@ -72,7 +71,7 @@ public final class DB_query implements Closeable {
                                 getNumber(id, "likes"),
                                 getNumber(id, "dislikes"),
                                 getNumber(id, "rebabbles")));
-                    }
+
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -324,13 +323,13 @@ public final class DB_query implements Closeable {
     public ArrayList<Babble> getInteraction(String username, String eingeloggter_user) {
 
         ArrayList<Babble> result = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement("select  b.id,b.text, b.created, b.creator , lb.created from dbp66.babble b, dbp66.likesbabble lb where lb.user = ? and lb.babble = b.id and lb.type = 'like'")) {
+        try (PreparedStatement ps = connection.prepareStatement("select  b.id,b.text, b.created, b.creator , lb.created from dbp66.babble b, dbp66.likesbabble lb where lb.user = ? and lb.babble = b.id and lb.type = 'like' and not EXISTS (select * from dbp66.blocks bl WHERE bl.blocker=b.creator and bl.blockee=?)")) {
             ps.setString(1, username);
+            ps.setString(2, eingeloggter_user);
 
             try (ResultSet rs = ps.executeQuery()) {
 
                 while (rs.next()) {
-                    if (!isBlocked(rs.getString(4), eingeloggter_user).getBlockState()) {
                         int id = rs.getInt(1);
                         result.add(new Babble(
                                 id,
@@ -342,7 +341,6 @@ public final class DB_query implements Closeable {
                                 getNumber(id, "rebabbles"),
                                 "liked",
                                 rs.getTimestamp(5)));
-                    }
                 }
 
             } catch (SQLException e) {
@@ -353,13 +351,13 @@ public final class DB_query implements Closeable {
             e.printStackTrace();
         }
 
-        try (PreparedStatement ps = connection.prepareStatement("select  b.id,b.text, b.created, b.creator , rb.created from dbp66.babble b, dbp66.rebabble rb where rb.user = ? and rb.babble = b.id")) {
+        try (PreparedStatement ps = connection.prepareStatement("select  b.id,b.text, b.created, b.creator , rb.created from dbp66.babble b, dbp66.rebabble rb where rb.user = ? and rb.babble = b.id and not EXISTS (select * from dbp66.blocks bl WHERE bl.blocker=b.creator and bl.blockee=?)")) {
             ps.setString(1, username);
+            ps.setString(2, eingeloggter_user);
 
             try (ResultSet rs = ps.executeQuery()) {
 
                 while (rs.next()) {
-                    if (!isBlocked(rs.getString(4), eingeloggter_user).getBlockState()) {
                         int id = rs.getInt(1);
                         result.add(new Babble(id,
                                 rs.getString(2),
@@ -370,8 +368,32 @@ public final class DB_query implements Closeable {
                                 getNumber(id, "rebabbles"),
                                 "rebabbled",
                                 rs.getTimestamp(5)));
-                    }
                 }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (PreparedStatement ps = connection.prepareStatement("select  b.id,b.text, b.created, b.creator , lb.created from dbp66.babble b, dbp66.likesbabble lb where lb.user = ? and not EXISTS (select * from dbp66.blocks bl WHERE bl.blocker=b.creator and bl.blockee=?) and lb.babble = b.id and lb.type = 'dislike'")) {
+            ps.setString(1, username);
+            ps.setString(2,eingeloggter_user);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                        int id = rs.getInt(1);
+                        result.add(new Babble(
+                                id,
+                                rs.getString(2),
+                                rs.getTimestamp(3),
+                                rs.getString(4),
+                                getNumber(id, "likes"),
+                                getNumber(id, "dislikes"),
+                                getNumber(id, "rebabbles"),
+                                "disliked",
+                                rs.getTimestamp(5)));
+                    }
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -424,16 +446,14 @@ public final class DB_query implements Closeable {
 
 
         ArrayList<Babble> result = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement("SELECT id, text,created, creator from dbp66.babble where text like ?")) {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT id, text,created, creator from dbp66.babble where text like ? and not EXISTS (select * from dbp66.blocks bl WHERE bl.blocker= creator and bl.blockee=?)")) {
             ps.setString(1, "%" + searchT + "%");
+            ps.setString(2, user);
 
             try (ResultSet rs = ps.executeQuery()) {
 
                 while (rs.next()) {
-                    String writer = rs.getString(4);
-                    if (!isBlocked(user, writer).getBlockState()) {
                         result.add(new Babble(rs.getInt(1), rs.getString(2), rs.getTimestamp(3), rs.getString(4), getNumber(rs.getInt(1), "likes"), getNumber(rs.getInt(1), "dislikes"), getNumber(rs.getInt(1), "rebabbles")));
-                    }
                 }
                 return result;
             } catch (SQLException e) {
@@ -445,13 +465,13 @@ public final class DB_query implements Closeable {
         return null;
     }
 
-    public ArrayList<Babble> getTop5() {
+    public ArrayList<Babble> getTop5(String eingeloggter_user) {
 
-        String sqltop = "select count(l.user) as num, b.id from dbp66.babble b, dbp66.likesbabble l where b.id = l.babble group by b.id order by num desc fetch first 5 rows only";
+        String sqltop = "select count(l.user) as num, b.id from dbp66.babble b, dbp66.likesbabble l where b.id = l.babble and not EXISTS (select * from dbp66.blocks bl WHERE bl.blocker=b.creator and bl.blockee=?) group by b.id order by num desc fetch first 5 rows only";
 
         ArrayList<Babble> result = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sqltop)) {
-
+                ps.setString(1,eingeloggter_user);
             try (ResultSet rs = ps.executeQuery()) {
 
                 while (rs.next()) {
