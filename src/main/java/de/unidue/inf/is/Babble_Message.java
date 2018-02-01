@@ -53,6 +53,7 @@ public final class Babble_Message extends HttpServlet {
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+        } finally {
             db_query.close();
         }
     }
@@ -71,15 +72,15 @@ public final class Babble_Message extends HttpServlet {
             if (user != null) {
                 String message = request.getParameter("message");
                 db_query.writeMessage(sessionId, profile, message);
-                db_query.complete();
-                db_query.close();
                 response.sendRedirect(url);
             } else {
                 response.sendRedirect("/");
             }
+            db_query.complete();
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+        } finally {
             db_query.close();
         }
     }

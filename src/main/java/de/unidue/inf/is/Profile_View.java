@@ -127,6 +127,7 @@ public final class Profile_View extends HttpServlet {
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+        }finally {
             db_query.close();
         }
     }
@@ -156,10 +157,10 @@ public final class Profile_View extends HttpServlet {
             default:
         }
         db_query.complete();
-        db_query.close();
         } catch (SQLException e) {
             req.getRequestDispatcher("/bad_requests/db_fail_connect.ftl");
             e.printStackTrace();
+        }finally {
             db_query.close();
         }
     }

@@ -33,7 +33,6 @@ public final class Create_Babble extends HttpServlet {
             if (user != null) {
                 //reset token
                 session.setAttribute("sessionID", sessionId);
-
                 request.setAttribute("loggedUser", sessionId);
                 request.getRequestDispatcher("create_babble.ftl").forward(request, response);
             }else{
@@ -42,6 +41,8 @@ public final class Create_Babble extends HttpServlet {
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+        }
+        finally {
             db_query.close();
         }
     }
@@ -62,15 +63,15 @@ public final class Create_Babble extends HttpServlet {
                 String inhalt = req.getParameter("babble");
                 Babble babble = new Babble(author, inhalt);
                 db_query.makeBabble(babble);
-                db_query.complete();
-                db_query.close();
                 resp.sendRedirect("profile_view/" + sessionId);
             } else {
                 resp.sendRedirect("/");
             }
+            db_query.complete();
         } catch (SQLException e) {
             req.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(req, resp);
             e.printStackTrace();
+        } finally {
             db_query.close();
         }
     }

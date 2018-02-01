@@ -60,6 +60,7 @@ public class Search_Page extends HttpServlet {
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request,response);
             e.printStackTrace();
+        }finally {
             db_query.close();
         }
     }

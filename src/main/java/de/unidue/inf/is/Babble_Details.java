@@ -64,6 +64,7 @@ public final class Babble_Details extends HttpServlet {
         } catch (SQLException e) {
             request.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(request, response);
             e.printStackTrace();
+        } finally {
             db_query.close();
         }
     }
@@ -71,7 +72,6 @@ public final class Babble_Details extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("act");
-
         HttpSession session = req.getSession();
         String sessionId = (String) session.getAttribute("sessionID");
         try {
@@ -104,16 +104,18 @@ public final class Babble_Details extends HttpServlet {
                         break;
                     case "Delete":
                         db_query.doAction(id, sessionId, "delete");
+                        resp.getWriter().write("<div style=\"font-size: 30px; text-align: center\"> <i class=\"fa fa-check-circle-o\" aria-hidden=\"true\" style=\"color: #348037; font-size: 90px;\"></i> <br> <p>Babble has been deleted </p></div>");
                         break;
                 }
                 db_query.complete();
-                db_query.close();
             }else {
                 resp.sendRedirect("/");
             }
+
         } catch (SQLException e) {
             req.getRequestDispatcher("/bad_requests/db_fail_connect.ftl").forward(req,resp);
             e.printStackTrace();
+        } finally {
             db_query.close();
         }
     }

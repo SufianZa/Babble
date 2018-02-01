@@ -43,42 +43,10 @@ public final class DBUtil {
         properties.setProperty("user", "DBP66");
         properties.setProperty("password", "vohr9uaw");
 
-        final String url = "jdbc:db2://hecate.is.inf.uni-due.de:50066/" + database + ":currentSchema=dbp66;";
-        //System.out.println(url);
+        final String url = "jdbc:db2://dione.is.inf.uni-due.de:50066/" + database + ":currentSchema=dbp66;";
+
         Connection connection = DriverManager.getConnection(url, properties);
         return connection;
-    }
-
-
-    public static boolean checkDatabaseExistsExternal(String database) {
-        // Nur für Demozwecke!
-        boolean exists = false;
-
-        try (Connection connection = getExternalConnection(database)) {
-            exists = true;
-        }
-        catch (SQLException e) {
-            exists = false;
-            e.printStackTrace();
-        }
-
-        return exists;
-    }
-
-
-    public static boolean checkDatabaseExists(String database) {
-        // Nur für Demozwecke!
-        boolean exists = false;
-
-        try (Connection connection = getConnection(database)) {
-            exists = true;
-        }
-        catch (SQLException e) {
-            exists = false;
-            e.printStackTrace();
-        }
-
-        return exists;
     }
 
 }
